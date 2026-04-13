@@ -1,0 +1,92 @@
+.chartsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.chartCard {
+  background: var(--color-neutral-2);
+  border: 1px solid var(--color-neutral-6);
+  border-radius: var(--radius-3);
+  padding: var(--space-5);
+}
+
+.chartTitle {
+  font: var(--font-heading);
+  font-size: 1.25rem;
+  color: var(--color-neutral-12);
+  margin-bottom: var(--space-4);
+}
+
+.chartWrapper {
+  width: 100%;
+  height: 300px;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+}
+
+.summaryTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.summaryTable thead {
+  background: var(--color-neutral-3);
+}
+
+.summaryTable th {
+  padding: var(--space-3);
+  text-align: left;
+  font: var(--font-subheading);
+  color: var(--color-neutral-12);
+  border-bottom: 2px solid var(--color-neutral-6);
+}
+
+.summaryTable td {
+  padding: var(--space-3);
+  font: var(--font-body);
+  color: var(--color-neutral-11);
+  border-bottom: 1px solid var(--color-neutral-5);
+}
+
+.summaryTable tbody tr:hover {
+  background: var(--color-neutral-3);
+}
+
+.alertCell {
+  color: var(--color-error-11);
+  font-weight: 600;
+}
+
+.highPrevalensi {
+  padding: var(--space-1) var(--space-2);
+  background: var(--color-error-3);
+  color: var(--color-error-11);
+  border-radius: var(--radius-2);
+  font-weight: 600;
+}
+
+.normalPrevalensi {
+  padding: var(--space-1) var(--space-2);
+  background: var(--color-success-3);
+  color: var(--color-success-11);
+  border-radius: var(--radius-2);
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .chartWrapper {
+    height: 250px;
+  }
+
+  .summaryTable {
+    font-size: 0.875rem;
+  }
+
+  .summaryTable th,
+  .summaryTable td {
+    padding: var(--space-2);
+  }
+}

@@ -1,0 +1,20 @@
+﻿WHO Reference count: 28
+Pertumbuhan count: 2
+Anak count: 6
+User count: 7
+Latest Pertumbuhan data: {
+  "id": "3fcd43a5-b643-4128-8c12-88f6f4be6e71",
+  "anak_id": "71a5952f-d226-4181-aa19-a2a5197fb7d5",
+  "tanggal_pengukuran": "2026-03-11T00:00:00.000Z",
+  "berat_badan": 3.5,
+  "tinggi_badan": 40,
+  "lingkar_kepala": null,
+  "umur_bulan": 0,
+  "zscore_tbu": -5.22,
+  "kategori_tbu": "Severely Stunted",
+  "zscore_bbu": 0.41,
+  "kategori_bbu": "Normal",
+  "zscore_bbtb": 0.44,
+  "kategori_bbtb": "Normal",
+  "created_at": "2026-03-11T01:03:08.000Z"
+}

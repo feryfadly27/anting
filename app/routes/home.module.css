@@ -1,0 +1,152 @@
+.home {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--color-brand-1) 0%, var(--color-accent-2) 100%);
+}
+
+.header {
+  padding: var(--space-5) var(--space-6);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--color-neutral-1);
+  box-shadow: var(--shadow-1);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.logoIcon {
+  width: 40px;
+  height: 40px;
+  color: var(--color-brand-9);
+}
+
+.logoText {
+  font: var(--font-heading);
+  color: var(--color-brand-11);
+  font-size: var(--font-size-3);
+}
+
+.headerActions {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.hero {
+  padding: var(--space-9) var(--space-6);
+  text-align: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.heroTitle {
+  font: var(--font-display);
+  color: var(--color-brand-12);
+  margin-bottom: var(--space-4);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.heroTagline {
+  font: var(--font-subheading);
+  color: var(--color-brand-11);
+  margin-bottom: var(--space-6);
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.heroCta {
+  display: flex;
+  gap: var(--space-4);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.overview {
+  padding: var(--space-9) var(--space-6);
+  background: var(--color-neutral-1);
+}
+
+.overviewContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.overviewTitle {
+  font: var(--font-heading);
+  color: var(--color-brand-11);
+  text-align: center;
+  margin-bottom: var(--space-6);
+}
+
+.overviewGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-6);
+}
+
+.overviewCard {
+  background: var(--color-neutral-2);
+  padding: var(--space-6);
+  border-radius: var(--radius-5);
+  box-shadow: var(--shadow-2);
+  transition:
+    transform 0.2s var(--ease),
+    box-shadow 0.2s var(--ease);
+}
+
+.overviewCard:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-3);
+}
+
+.cardIcon {
+  width: 48px;
+  height: 48px;
+  color: var(--color-brand-9);
+  margin-bottom: var(--space-4);
+}
+
+.cardTitle {
+  font: var(--font-subheading);
+  color: var(--color-neutral-12);
+  margin-bottom: var(--space-3);
+}
+
+.cardDescription {
+  font: var(--font-body);
+  color: var(--color-neutral-11);
+  line-height: var(--font-lineheight-3);
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: var(--space-4);
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .hero {
+    padding: var(--space-7) var(--space-4);
+  }
+
+  .heroTitle {
+    font-size: var(--font-size-6);
+  }
+
+  .heroCta {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .overview {
+    padding: var(--space-7) var(--space-4);
+  }
+
+  .overviewGrid {
+    grid-template-columns: 1fr;
+  }
+}

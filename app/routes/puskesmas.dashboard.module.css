@@ -1,0 +1,121 @@
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding: var(--space-6);
+}
+
+.welcome {
+  margin-bottom: var(--space-4);
+}
+
+.welcomeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+
+.welcomeTitle {
+  font: var(--font-display);
+  font-size: 2rem;
+  color: var(--color-neutral-12);
+  margin-bottom: var(--space-2);
+}
+
+.welcomeText {
+  font: var(--font-body);
+  color: var(--color-neutral-11);
+  max-width: 600px;
+}
+
+.welcomeActions {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.buttonIcon {
+  width: 16px;
+  height: 16px;
+  margin-right: var(--space-2);
+}
+
+.tabs {
+  margin-top: var(--space-4);
+}
+
+.tabContent {
+  margin-top: var(--space-5);
+}
+
+.filterSection {
+  background: var(--color-neutral-2);
+  border: 1px solid var(--color-neutral-6);
+  border-radius: var(--radius-3);
+  padding: var(--space-4);
+  margin-bottom: var(--space-5);
+}
+
+.filterGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.filterIcon {
+  width: 20px;
+  height: 20px;
+  color: var(--color-neutral-10);
+}
+
+.filterLabel {
+  font: var(--font-subheading);
+  color: var(--color-neutral-12);
+}
+
+.filterSelect {
+  min-width: 250px;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-8);
+  font: var(--font-body);
+  color: var(--color-neutral-11);
+}
+
+@media (max-width: 1024px) {
+  .welcomeHeader {
+    flex-direction: column;
+  }
+
+  .welcomeActions {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    padding: var(--space-4);
+  }
+
+  .welcomeTitle {
+    font-size: 1.5rem;
+  }
+
+  .filterGroup {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filterSelect {
+    width: 100%;
+  }
+
+  .welcomeActions {
+    flex-direction: column;
+  }
+}
