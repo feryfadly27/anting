@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router";
 import type { Route } from "./+types/m.parent.dashboard";
 import { getCurrentUser } from "~/utils/auth";
 import { toast } from "~/hooks/use-toast";
+import { toIndonesianNutritionAlert, toIndonesianNutritionStatus } from "~/utils/nutrition-status";
 import styles from "./m.parent.dashboard.module.css";
 
 const parentApi = {
@@ -59,9 +60,12 @@ function getStatusType(summary: any): "normal" | "warning" | "danger" {
   if (!summary.latestPertumbuhan) return "normal";
   if (summary.needsAttention) {
     const p = summary.latestPertumbuhan;
-    if ((p.zscore_tbu !== null && p.zscore_tbu < -3) ||
-        (p.zscore_bbu !== null && p.zscore_bbu < -3) ||
-        (p.zscore_bbtb !== null && p.zscore_bbtb < -3)) return "danger";
+    if (
+      (p.zscore_tbu !== null && p.zscore_tbu < -3) ||
+      (p.zscore_bbu !== null && p.zscore_bbu < -3) ||
+      (p.zscore_bbtb !== null && p.zscore_bbtb < -3)
+    )
+      return "danger";
     return "warning";
   }
   return "normal";
@@ -87,7 +91,9 @@ export default function MobileParentDashboard() {
       setUserId(user.id);
       if (user.name) setUserName(user.name);
     });
-    return () => { isMounted = false; };
+    return () => {
+      isMounted = false;
+    };
   }, [navigate]);
 
   useEffect(() => {
@@ -97,10 +103,7 @@ export default function MobileParentDashboard() {
   const loadData = async () => {
     try {
       setLoading(true);
-      const [statsData, summaries] = await Promise.all([
-        parentApi.getStats(),
-        parentApi.getSummaries(),
-      ]);
+      const [statsData, summaries] = await Promise.all([parentApi.getStats(), parentApi.getSummaries()]);
       setStats(statsData);
       setAnakSummaries(summaries);
     } catch (error) {
@@ -126,7 +129,9 @@ export default function MobileParentDashboard() {
       {/* Header */}
       <header className={styles.header}>
         <div className={styles.headerAvatar}>
-          <span className={styles.icon} style={{ fontSize: "1.75rem" }}>face_6</span>
+          <span className={styles.icon} style={{ fontSize: "1.75rem" }}>
+            face_6
+          </span>
         </div>
         <div className={styles.headerInfo}>
           <h2 className={styles.headerName}>Halo, {userName}!</h2>
@@ -195,7 +200,8 @@ export default function MobileParentDashboard() {
                 <div className={styles.childMeta}>
                   <h3 className={styles.childName}>{currentAnak.anak.nama}</h3>
                   <p className={styles.childAge}>
-                    {currentAnak.anak.jenis_kelamin === "L" ? "Laki-laki" : "Perempuan"} • {calculateAge(currentAnak.anak.tanggal_lahir)}
+                    {currentAnak.anak.jenis_kelamin === "L" ? "Laki-laki" : "Perempuan"} •{" "}
+                    {calculateAge(currentAnak.anak.tanggal_lahir)}
                   </p>
                 </div>
                 <div className={styles.statusBadge} data-status={getStatusType(currentAnak)}>
@@ -207,20 +213,29 @@ export default function MobileParentDashboard() {
                 <>
                   {/* Latest measurement date */}
                   <p className={styles.updateLabel}>
-                    Pengukuran terakhir: {new Date(currentAnak.latestPertumbuhan.tanggal_pengukuran).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })}
+                    Pengukuran terakhir:{" "}
+                    {new Date(currentAnak.latestPertumbuhan.tanggal_pengukuran).toLocaleDateString("id-ID", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })}
                   </p>
 
                   {/* Weight & Height */}
                   <div className={styles.measureGrid}>
                     <div className={styles.measureItem}>
-                      <span className={`${styles.icon} ${styles.textPrimary}`} style={{ fontSize: "1.25rem" }}>weight</span>
+                      <span className={`${styles.icon} ${styles.textPrimary}`} style={{ fontSize: "1.25rem" }}>
+                        weight
+                      </span>
                       <div>
                         <p className={styles.measureVal}>{currentAnak.latestPertumbuhan.berat_badan} kg</p>
                         <p className={styles.measureLabel}>Berat Badan</p>
                       </div>
                     </div>
                     <div className={styles.measureItem}>
-                      <span className={`${styles.icon} ${styles.textPrimary}`} style={{ fontSize: "1.25rem" }}>straighten</span>
+                      <span className={`${styles.icon} ${styles.textPrimary}`} style={{ fontSize: "1.25rem" }}>
+                        straighten
+                      </span>
                       <div>
                         <p className={styles.measureVal}>{currentAnak.latestPertumbuhan.tinggi_badan} cm</p>
                         <p className={styles.measureLabel}>Tinggi Badan</p>
@@ -233,15 +248,24 @@ export default function MobileParentDashboard() {
                     {currentAnak.latestPertumbuhan.zscore_tbu !== null && (
                       <div className={styles.zscoreRow}>
                         <div className={styles.zscoreLabel}>
-                          <span>TB/U <span className={styles.zscoreCategory}>({currentAnak.latestPertumbuhan.kategori_tbu})</span></span>
-                          <span className={styles[`zscore_${getZScoreColor(currentAnak.latestPertumbuhan.zscore_tbu)}`]}>
+                          <span>
+                            TB/U{" "}
+                            <span className={styles.zscoreCategory}>
+                              ({toIndonesianNutritionStatus(currentAnak.latestPertumbuhan.kategori_tbu)})
+                            </span>
+                          </span>
+                          <span
+                            className={styles[`zscore_${getZScoreColor(currentAnak.latestPertumbuhan.zscore_tbu)}`]}
+                          >
                             {currentAnak.latestPertumbuhan.zscore_tbu > 0 ? "+" : ""}
                             {Number(currentAnak.latestPertumbuhan.zscore_tbu).toFixed(2)} SD
                           </span>
                         </div>
                         <div className={styles.progressBarBg}>
                           <div
-                            className={styles[`progressBar_${getZScoreColor(currentAnak.latestPertumbuhan.zscore_tbu)}`]}
+                            className={
+                              styles[`progressBar_${getZScoreColor(currentAnak.latestPertumbuhan.zscore_tbu)}`]
+                            }
                             style={{ width: `${getZScorePercent(currentAnak.latestPertumbuhan.zscore_tbu)}%` }}
                           ></div>
                         </div>
@@ -250,15 +274,24 @@ export default function MobileParentDashboard() {
                     {currentAnak.latestPertumbuhan.zscore_bbu !== null && (
                       <div className={styles.zscoreRow}>
                         <div className={styles.zscoreLabel}>
-                          <span>BB/U <span className={styles.zscoreCategory}>({currentAnak.latestPertumbuhan.kategori_bbu})</span></span>
-                          <span className={styles[`zscore_${getZScoreColor(currentAnak.latestPertumbuhan.zscore_bbu)}`]}>
+                          <span>
+                            BB/U{" "}
+                            <span className={styles.zscoreCategory}>
+                              ({toIndonesianNutritionStatus(currentAnak.latestPertumbuhan.kategori_bbu)})
+                            </span>
+                          </span>
+                          <span
+                            className={styles[`zscore_${getZScoreColor(currentAnak.latestPertumbuhan.zscore_bbu)}`]}
+                          >
                             {currentAnak.latestPertumbuhan.zscore_bbu > 0 ? "+" : ""}
                             {Number(currentAnak.latestPertumbuhan.zscore_bbu).toFixed(2)} SD
                           </span>
                         </div>
                         <div className={styles.progressBarBg}>
                           <div
-                            className={styles[`progressBar_${getZScoreColor(currentAnak.latestPertumbuhan.zscore_bbu)}`]}
+                            className={
+                              styles[`progressBar_${getZScoreColor(currentAnak.latestPertumbuhan.zscore_bbu)}`]
+                            }
                             style={{ width: `${getZScorePercent(currentAnak.latestPertumbuhan.zscore_bbu)}%` }}
                           ></div>
                         </div>
@@ -267,15 +300,24 @@ export default function MobileParentDashboard() {
                     {currentAnak.latestPertumbuhan.zscore_bbtb !== null && (
                       <div className={styles.zscoreRow}>
                         <div className={styles.zscoreLabel}>
-                          <span>BB/TB <span className={styles.zscoreCategory}>({currentAnak.latestPertumbuhan.kategori_bbtb})</span></span>
-                          <span className={styles[`zscore_${getZScoreColor(currentAnak.latestPertumbuhan.zscore_bbtb)}`]}>
+                          <span>
+                            BB/TB{" "}
+                            <span className={styles.zscoreCategory}>
+                              ({toIndonesianNutritionStatus(currentAnak.latestPertumbuhan.kategori_bbtb)})
+                            </span>
+                          </span>
+                          <span
+                            className={styles[`zscore_${getZScoreColor(currentAnak.latestPertumbuhan.zscore_bbtb)}`]}
+                          >
                             {currentAnak.latestPertumbuhan.zscore_bbtb > 0 ? "+" : ""}
                             {Number(currentAnak.latestPertumbuhan.zscore_bbtb).toFixed(2)} SD
                           </span>
                         </div>
                         <div className={styles.progressBarBg}>
                           <div
-                            className={styles[`progressBar_${getZScoreColor(currentAnak.latestPertumbuhan.zscore_bbtb)}`]}
+                            className={
+                              styles[`progressBar_${getZScoreColor(currentAnak.latestPertumbuhan.zscore_bbtb)}`]
+                            }
                             style={{ width: `${getZScorePercent(currentAnak.latestPertumbuhan.zscore_bbtb)}%` }}
                           ></div>
                         </div>
@@ -287,11 +329,15 @@ export default function MobileParentDashboard() {
                   {currentAnak.alerts && currentAnak.alerts.length > 0 && (
                     <div className={styles.alertsBox}>
                       <div className={styles.alertsHeader}>
-                        <span className={styles.icon} style={{ fontSize: "1rem", color: "#dc3545" }}>warning</span>
+                        <span className={styles.icon} style={{ fontSize: "1rem", color: "#dc3545" }}>
+                          warning
+                        </span>
                         <span>Peringatan</span>
                       </div>
                       {currentAnak.alerts.map((alert: string, idx: number) => (
-                        <p key={idx} className={styles.alertItem}>{alert}</p>
+                        <p key={idx} className={styles.alertItem}>
+                          {toIndonesianNutritionAlert(alert)}
+                        </p>
                       ))}
                     </div>
                   )}
@@ -301,7 +347,9 @@ export default function MobileParentDashboard() {
                 </>
               ) : (
                 <div className={styles.noDataBox}>
-                  <span className={styles.icon} style={{ fontSize: "2.5rem", color: "#94a3b8" }}>info</span>
+                  <span className={styles.icon} style={{ fontSize: "2.5rem", color: "#94a3b8" }}>
+                    info
+                  </span>
                   <p>Belum ada data pertumbuhan untuk {currentAnak.anak.nama}.</p>
                   <Link to="/parent/dashboard" className={styles.primaryBtn}>
                     Tambah Data Pertumbuhan
@@ -312,7 +360,9 @@ export default function MobileParentDashboard() {
               {/* Link to desktop detail */}
               <Link to="/parent/dashboard" className={styles.detailBtn}>
                 <span>Lihat Grafik & Kelola Data</span>
-                <span className={styles.icon} style={{ fontSize: "1rem" }}>arrow_forward</span>
+                <span className={styles.icon} style={{ fontSize: "1rem" }}>
+                  arrow_forward
+                </span>
               </Link>
             </div>
           </section>
@@ -320,7 +370,9 @@ export default function MobileParentDashboard() {
           /* No children at all */
           <section className={styles.growthSection}>
             <div className={styles.emptyCard}>
-              <span className={styles.icon} style={{ fontSize: "3rem", color: "#94a3b8" }}>child_care</span>
+              <span className={styles.icon} style={{ fontSize: "3rem", color: "#94a3b8" }}>
+                child_care
+              </span>
               <h3>Belum ada data anak</h3>
               <p className={styles.emptyText}>Silakan tambahkan data anak terlebih dahulu di Dashboard Desktop.</p>
               <Link to="/parent/dashboard" className={styles.primaryBtn}>
@@ -346,9 +398,7 @@ export default function MobileParentDashboard() {
                   >
                     <div className={styles.childListLeft}>
                       <div className={styles.childListIcon}>
-                        <span className={styles.icon}>
-                          {s.anak.jenis_kelamin === "L" ? "face" : "face_3"}
-                        </span>
+                        <span className={styles.icon}>{s.anak.jenis_kelamin === "L" ? "face" : "face_3"}</span>
                       </div>
                       <div>
                         <p className={styles.childListName}>{s.anak.nama}</p>

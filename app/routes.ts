@@ -14,6 +14,7 @@ export default [
   route("api/auth/register", "routes/api.auth.register.tsx"),
   route("api/auth/logout", "routes/api.auth.logout.tsx"),
   route("api/auth/me", "routes/api.auth.me.tsx"),
+  route("api/wilayah", "routes/api.wilayah.tsx"),
 
   // Dashboard API Routes
   route("api/parent/dashboard", "routes/api.parent.dashboard.tsx"),

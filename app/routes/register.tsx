@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, Link } from "react-router";
 import { Heart } from "lucide-react";
 import type { Route } from "./+types/register";
@@ -22,22 +22,57 @@ export default function Register() {
   const errorRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const checkedRef = useRef(false);
+  const [wilayahList, setWilayahList] = useState<Array<{ id: string; nama_wilayah: string; tipe: string }>>([]);
+  const [isLoadingWilayah, setIsLoadingWilayah] = useState(true);
 
   useEffect(() => {
     if (checkedRef.current) return;
     checkedRef.current = true;
-    
+
     // Check if user is already logged in
-    getCurrentUser().then(user => {
+    getCurrentUser().then((user) => {
       if (user) {
         navigate(getDashboardPath(user.role));
       }
     });
   }, [navigate]);
 
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadWilayah = async () => {
+      try {
+        const response = await fetch("/api/wilayah");
+        if (!response.ok) {
+          throw new Error("Gagal memuat wilayah");
+        }
+        const data = await response.json();
+        if (isMounted) {
+          setWilayahList(Array.isArray(data) ? data : []);
+        }
+      } catch (error) {
+        console.error("Load wilayah error:", error);
+        toast({
+          title: "Gagal memuat wilayah",
+          description: "Silakan refresh halaman lalu coba lagi.",
+          variant: "destructive",
+        });
+      } finally {
+        if (isMounted) {
+          setIsLoadingWilayah(false);
+        }
+      }
+    };
+
+    loadWilayah();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Clear error
     if (errorRef.current) {
       errorRef.current.textContent = "";
@@ -49,6 +84,15 @@ export default function Register() {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
     const confirmPassword = formData.get("confirmPassword") as string;
+    const wilayahId = formData.get("wilayah_id") as string;
+
+    if (!wilayahId) {
+      if (errorRef.current) {
+        errorRef.current.textContent = "Silakan pilih wilayah terlebih dahulu";
+        errorRef.current.style.display = "block";
+      }
+      return;
+    }
 
     if (password !== confirmPassword) {
       if (errorRef.current) {
@@ -73,8 +117,8 @@ export default function Register() {
     }
 
     try {
-      const user = await register(name, email, password);
-      
+      const user = await register(name, email, password, wilayahId);
+
       if (!user) {
         if (errorRef.current) {
           errorRef.current.textContent = "Gagal mendaftar. Email mungkin sudah digunakan.";
@@ -86,18 +130,18 @@ export default function Register() {
         }
         return;
       }
-      
+
       const dashboardPath = getDashboardPath(user.role);
-      
+
       toast({
         title: "Pendaftaran berhasil",
         description: `Selamat datang, ${user.name}!`,
       });
-      
+
       // Navigate using React Router (client-side navigation)
       navigate(dashboardPath);
     } catch (error) {
-      console.error('Register error:', error);
+      console.error("Register error:", error);
       if (errorRef.current) {
         errorRef.current.textContent = "Terjadi kesalahan saat mendaftar. Silakan coba lagi.";
         errorRef.current.style.display = "block";
@@ -150,6 +194,29 @@ export default function Register() {
           </div>
 
           <div className={styles.formGroup}>
+            <label htmlFor="wilayah_id" className={styles.label}>
+              Wilayah
+            </label>
+            <select
+              id="wilayah_id"
+              name="wilayah_id"
+              className={styles.input}
+              defaultValue=""
+              required
+              disabled={isLoadingWilayah}
+            >
+              <option value="" disabled>
+                {isLoadingWilayah ? "Memuat wilayah..." : "Pilih wilayah"}
+              </option>
+              {wilayahList.map((wilayah) => (
+                <option key={wilayah.id} value={wilayah.id}>
+                  {wilayah.nama_wilayah} ({wilayah.tipe})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className={styles.formGroup}>
             <label htmlFor="password" className={styles.label}>
               Password
             </label>
@@ -177,7 +244,7 @@ export default function Register() {
             />
           </div>
 
-          <button type="submit" className={styles.submitButton} ref={buttonRef}>
+          <button type="submit" className={styles.submitButton} ref={buttonRef} disabled={isLoadingWilayah}>
             Daftar
           </button>
         </form>

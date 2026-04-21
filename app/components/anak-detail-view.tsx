@@ -4,6 +4,7 @@ import { Card } from "./ui/card/card";
 import { Button } from "./ui/button/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs/tabs";
 import type { Database } from "~/db/types";
+import { toIndonesianNutritionStatus } from "~/utils/nutrition-status";
 import styles from "./anak-detail-view.module.css";
 
 type AnakRow = Database["public"]["Tables"]["anak"]["Row"];
@@ -49,31 +50,31 @@ export function AnakDetailView({
   };
 
   const getZScoreClass = (zscore: number, type: string) => {
-    if (type === 'tbu') {
+    if (type === "tbu") {
       if (zscore >= -2) return styles.zscoreNormal;
       if (zscore >= -3) return styles.zscoreWarning;
       return styles.zscoreDanger;
     }
-    if (type === 'bbu') {
+    if (type === "bbu") {
       if (zscore >= -2) return styles.zscoreNormal;
       if (zscore >= -3) return styles.zscoreWarning;
       return styles.zscoreDanger;
     }
-    if (type === 'bbtb') {
+    if (type === "bbtb") {
       if (zscore >= -2 && zscore <= 2) return styles.zscoreNormal;
-      if ((zscore >= -3 && zscore < -2) || (zscore > 2)) return styles.zscoreWarning;
+      if ((zscore >= -3 && zscore < -2) || zscore > 2) return styles.zscoreWarning;
       return styles.zscoreDanger;
     }
-    return '';
+    return "";
   };
 
   const getZScoreIcon = (zscore: number, type: string) => {
-    if (type === 'tbu' || type === 'bbu') {
+    if (type === "tbu" || type === "bbu") {
       if (zscore >= -2) return <TrendingUp size={14} />;
       if (zscore >= -3) return <Minus size={14} />;
       return <TrendingDown size={14} />;
     }
-    if (type === 'bbtb') {
+    if (type === "bbtb") {
       if (zscore >= -2 && zscore <= 2) return <Minus size={14} />;
       if (zscore > 2) return <TrendingUp size={14} />;
       return <TrendingDown size={14} />;
@@ -186,7 +187,7 @@ export function AnakDetailView({
                         </div>
                       )}
                     </div>
-                    
+
                     {/* Z-Score Section */}
                     {(item.zscore_tbu !== null || item.zscore_bbu !== null || item.zscore_bbtb !== null) && (
                       <div className={styles.zscoreSection}>
@@ -198,9 +199,9 @@ export function AnakDetailView({
                                 <span className={styles.zscoreLabel}>TB/U (Tinggi per Umur)</span>
                                 <span className={styles.zscoreValue}>{item.zscore_tbu.toFixed(2)} SD</span>
                               </div>
-                              <div className={`${styles.zscoreBadge} ${getZScoreClass(item.zscore_tbu, 'tbu')}`}>
-                                {getZScoreIcon(item.zscore_tbu, 'tbu')}
-                                <span>{item.kategori_tbu}</span>
+                              <div className={`${styles.zscoreBadge} ${getZScoreClass(item.zscore_tbu, "tbu")}`}>
+                                {getZScoreIcon(item.zscore_tbu, "tbu")}
+                                <span>{toIndonesianNutritionStatus(item.kategori_tbu)}</span>
                               </div>
                             </div>
                           )}
@@ -210,9 +211,9 @@ export function AnakDetailView({
                                 <span className={styles.zscoreLabel}>BB/U (Berat per Umur)</span>
                                 <span className={styles.zscoreValue}>{item.zscore_bbu.toFixed(2)} SD</span>
                               </div>
-                              <div className={`${styles.zscoreBadge} ${getZScoreClass(item.zscore_bbu, 'bbu')}`}>
-                                {getZScoreIcon(item.zscore_bbu, 'bbu')}
-                                <span>{item.kategori_bbu}</span>
+                              <div className={`${styles.zscoreBadge} ${getZScoreClass(item.zscore_bbu, "bbu")}`}>
+                                {getZScoreIcon(item.zscore_bbu, "bbu")}
+                                <span>{toIndonesianNutritionStatus(item.kategori_bbu)}</span>
                               </div>
                             </div>
                           )}
@@ -222,9 +223,9 @@ export function AnakDetailView({
                                 <span className={styles.zscoreLabel}>BB/TB (Berat per Tinggi)</span>
                                 <span className={styles.zscoreValue}>{item.zscore_bbtb.toFixed(2)} SD</span>
                               </div>
-                              <div className={`${styles.zscoreBadge} ${getZScoreClass(item.zscore_bbtb, 'bbtb')}`}>
-                                {getZScoreIcon(item.zscore_bbtb, 'bbtb')}
-                                <span>{item.kategori_bbtb}</span>
+                              <div className={`${styles.zscoreBadge} ${getZScoreClass(item.zscore_bbtb, "bbtb")}`}>
+                                {getZScoreIcon(item.zscore_bbtb, "bbtb")}
+                                <span>{toIndonesianNutritionStatus(item.kategori_bbtb)}</span>
                               </div>
                             </div>
                           )}

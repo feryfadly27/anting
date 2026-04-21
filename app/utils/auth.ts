@@ -6,7 +6,7 @@ export interface AuthSession {
 }
 
 /**
- * Login with Internal API (MySQL Backend)
+ * Login with Internal API backend
  */
 export async function login(email: string, password: string): Promise<User | null> {
   try {
@@ -37,12 +37,13 @@ export async function login(email: string, password: string): Promise<User | nul
 /**
  * Register new user with Internal API
  */
-export async function register(name: string, email: string, password: string): Promise<User | null> {
+export async function register(name: string, email: string, password: string, wilayahId: string): Promise<User | null> {
   try {
     const formData = new FormData();
     formData.append("name", name);
     formData.append("email", email);
     formData.append("password", password);
+    formData.append("wilayah_id", wilayahId);
 
     const response = await fetch("/api/auth/register", {
       method: "POST",

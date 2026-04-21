@@ -2,6 +2,7 @@ import { Activity, AlertTriangle, Baby, Calendar } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card/card";
 import { Badge } from "~/components/ui/badge/badge";
 import type { DashboardStats, AnakSummary } from "~/db/services/dashboard.service";
+import { toIndonesianNutritionAlert, toIndonesianNutritionStatus } from "~/utils/nutrition-status";
 import styles from "./parent-dashboard-summary.module.css";
 
 interface ParentDashboardSummaryProps {
@@ -76,11 +77,7 @@ export function ParentDashboardSummary({ stats, anakSummaries, onSelectAnak }: P
           <h2 className={styles.summariesTitle}>Ringkasan Data Anak</h2>
           <div className={styles.summariesGrid}>
             {anakSummaries.map((summary) => (
-              <Card
-                key={summary.anak.id}
-                className={styles.summaryCard}
-                onClick={() => onSelectAnak(summary.anak.id)}
-              >
+              <Card key={summary.anak.id} className={styles.summaryCard} onClick={() => onSelectAnak(summary.anak.id)}>
                 <CardHeader>
                   <div className={styles.summaryHeader}>
                     <CardTitle className={styles.summaryName}>{summary.anak.nama}</CardTitle>
@@ -115,7 +112,9 @@ export function ParentDashboardSummary({ stats, anakSummaries, onSelectAnak }: P
                             <Badge variant={getZScoreBadgeVariant(summary.latestPertumbuhan.zscore_tbu)}>
                               {summary.latestPertumbuhan.zscore_tbu.toFixed(2)} SD
                             </Badge>
-                            <span className={styles.zscoreCategory}>{summary.latestPertumbuhan.kategori_tbu}</span>
+                            <span className={styles.zscoreCategory}>
+                              {toIndonesianNutritionStatus(summary.latestPertumbuhan.kategori_tbu)}
+                            </span>
                           </div>
                         )}
                         {summary.latestPertumbuhan.zscore_bbu !== null && (
@@ -124,7 +123,9 @@ export function ParentDashboardSummary({ stats, anakSummaries, onSelectAnak }: P
                             <Badge variant={getZScoreBadgeVariant(summary.latestPertumbuhan.zscore_bbu)}>
                               {summary.latestPertumbuhan.zscore_bbu.toFixed(2)} SD
                             </Badge>
-                            <span className={styles.zscoreCategory}>{summary.latestPertumbuhan.kategori_bbu}</span>
+                            <span className={styles.zscoreCategory}>
+                              {toIndonesianNutritionStatus(summary.latestPertumbuhan.kategori_bbu)}
+                            </span>
                           </div>
                         )}
                         {summary.latestPertumbuhan.zscore_bbtb !== null && (
@@ -133,7 +134,9 @@ export function ParentDashboardSummary({ stats, anakSummaries, onSelectAnak }: P
                             <Badge variant={getZScoreBadgeVariant(summary.latestPertumbuhan.zscore_bbtb)}>
                               {summary.latestPertumbuhan.zscore_bbtb.toFixed(2)} SD
                             </Badge>
-                            <span className={styles.zscoreCategory}>{summary.latestPertumbuhan.kategori_bbtb}</span>
+                            <span className={styles.zscoreCategory}>
+                              {toIndonesianNutritionStatus(summary.latestPertumbuhan.kategori_bbtb)}
+                            </span>
                           </div>
                         )}
                       </div>
@@ -144,7 +147,7 @@ export function ParentDashboardSummary({ stats, anakSummaries, onSelectAnak }: P
                           {summary.alerts.map((alert, idx) => (
                             <div key={idx} className={styles.alert}>
                               <AlertTriangle className={styles.alertIconSmall} />
-                              {alert}
+                              {toIndonesianNutritionAlert(alert)}
                             </div>
                           ))}
                         </div>
