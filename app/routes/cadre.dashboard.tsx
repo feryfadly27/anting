@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Users, Calendar, TrendingUp, AlertCircle } from "lucide-react";
 import type { Route } from "./+types/cadre.dashboard";
 import styles from "./cadre.dashboard.module.css";
@@ -124,6 +124,11 @@ export default function CadreDashboard() {
           <p className={styles.welcomeText}>
             Kelola data kesehatan bayi di wilayah Anda. Pantau perkembangan, catat pemeriksaan, dan koordinasikan dengan
             puskesmas untuk pencegahan stunting yang efektif.
+          </p>
+          <p className={styles.welcomeText} style={{ marginTop: "0.75rem" }}>
+            <Link to="/m/cadre/dashboard" style={{ color: "var(--color-accent-9)", fontWeight: 600 }}>
+              Buka tampilan mobile untuk kader
+            </Link>
           </p>
         </section>
 

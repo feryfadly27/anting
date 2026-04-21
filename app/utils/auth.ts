@@ -106,7 +106,7 @@ export function getDashboardPath(role: UserRole): string {
     case "orang_tua":
       return "/parent/dashboard";
     case "kader":
-      return "/cadre/dashboard";
+      return "/m/cadre/dashboard";
     case "puskesmas":
       return "/puskesmas/dashboard";
     default:

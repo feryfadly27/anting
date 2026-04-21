@@ -1,8 +1,18 @@
-const CACHE_VERSION = "sibanting-v1";
+const CACHE_VERSION = "sibanting-v2";
 const APP_SHELL_CACHE = `${CACHE_VERSION}-shell`;
 const API_CACHE = `${CACHE_VERSION}-api`;
 
-const APP_SHELL_ASSETS = ["/", "/login", "/m/parent/dashboard", "/manifest.webmanifest", "/offline.html", "/favicon.svg"];
+const APP_SHELL_ASSETS = [
+  "/",
+  "/login",
+  "/m/parent/dashboard",
+  "/m/cadre/dashboard",
+  "/m/cadre/anak",
+  "/m/cadre/rekap",
+  "/manifest.webmanifest",
+  "/offline.html",
+  "/favicon.svg",
+];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(

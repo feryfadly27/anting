@@ -13,6 +13,9 @@ export default [
   route("m/parent/anak/:anakId/pertumbuhan/new", "routes/m.parent.anak.$anakId.pertumbuhan.new.tsx"),
   route("m/parent/anak/:anakId/imunisasi/new", "routes/m.parent.anak.$anakId.imunisasi.new.tsx"),
   route("cadre/dashboard", "routes/cadre.dashboard.tsx"),
+  route("m/cadre/dashboard", "routes/mobile-cadre/m.cadre.dashboard.tsx"),
+  route("m/cadre/anak", "routes/mobile-cadre/m.cadre.anak.tsx"),
+  route("m/cadre/rekap", "routes/mobile-cadre/m.cadre.rekap.tsx"),
   route("puskesmas/dashboard", "routes/puskesmas.dashboard.tsx"),
 
   // Auth API Routes
