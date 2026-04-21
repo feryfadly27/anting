@@ -6,6 +6,12 @@ export default [
   route("register", "routes/register.tsx"),
   route("parent/dashboard", "routes/parent.dashboard.tsx"),
   route("m/parent/dashboard", "routes/m.parent.dashboard.tsx"),
+  route("m/parent/status", "routes/mobile-parent/m.parent.status.tsx"),
+  route("m/parent/anak", "routes/mobile-parent/m.parent.anak.tsx"),
+  route("m/parent/anak/new", "routes/m.parent.anak.new.tsx"),
+  route("m/parent/anak/:anakId", "routes/m.parent.anak.$anakId.tsx"),
+  route("m/parent/anak/:anakId/pertumbuhan/new", "routes/m.parent.anak.$anakId.pertumbuhan.new.tsx"),
+  route("m/parent/anak/:anakId/imunisasi/new", "routes/m.parent.anak.$anakId.imunisasi.new.tsx"),
   route("cadre/dashboard", "routes/cadre.dashboard.tsx"),
   route("puskesmas/dashboard", "routes/puskesmas.dashboard.tsx"),
 

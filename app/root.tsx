@@ -33,6 +33,14 @@ export const links: Route.LinksFunction = () => [
     rel: "stylesheet",
     href: "https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap",
   },
+  {
+    rel: "manifest",
+    href: "/manifest.webmanifest",
+  },
+  {
+    rel: "apple-touch-icon",
+    href: "/icons/icon-192.svg",
+  },
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -42,6 +50,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#00b0f0" />
         <Meta />
         <Links />
       </head>
@@ -50,6 +59,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Toaster />
         <ScrollRestoration />
         <Scripts />
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "if ('serviceWorker' in navigator) { window.addEventListener('load', function () { navigator.serviceWorker.register('/sw.js').catch(function (err) { console.error('SW registration failed', err); }); }); }",
+          }}
+        />
       </body>
     </html>
   );

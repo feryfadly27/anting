@@ -4,6 +4,7 @@ import type { Route } from "./+types/m.parent.dashboard";
 import { getCurrentUser } from "~/utils/auth";
 import { toast } from "~/hooks/use-toast";
 import { toIndonesianNutritionAlert, toIndonesianNutritionStatus } from "~/utils/nutrition-status";
+import { MobileParentNav } from "~/components/mobile-parent-nav";
 import styles from "./m.parent.dashboard.module.css";
 
 const parentApi = {
@@ -76,6 +77,7 @@ export default function MobileParentDashboard() {
   const [userId, setUserId] = useState<string | null>(null);
   const [userName, setUserName] = useState<string>("Bunda");
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [stats, setStats] = useState<any>(null);
   const [anakSummaries, setAnakSummaries] = useState<any[]>([]);
   const [selectedAnakIdx, setSelectedAnakIdx] = useState(0);
@@ -103,11 +105,13 @@ export default function MobileParentDashboard() {
   const loadData = async () => {
     try {
       setLoading(true);
+      setLoadError(null);
       const [statsData, summaries] = await Promise.all([parentApi.getStats(), parentApi.getSummaries()]);
       setStats(statsData);
       setAnakSummaries(summaries);
     } catch (error) {
       console.error(error);
+      setLoadError("Gagal memuat data. Cek koneksi lalu coba lagi.");
       toast({ title: "Error", description: "Gagal memuat data", variant: "destructive" });
     } finally {
       setLoading(false);
@@ -122,7 +126,24 @@ export default function MobileParentDashboard() {
     );
   }
 
+  if (loadError) {
+    return (
+      <div className={styles.page}>
+        <main className={styles.main}>
+          <section className={styles.errorCard}>
+            <h2>Data belum tersedia</h2>
+            <p>{loadError}</p>
+            <button className={styles.primaryBtn} onClick={loadData}>
+              Coba Lagi
+            </button>
+          </section>
+        </main>
+      </div>
+    );
+  }
+
   const currentAnak = anakSummaries.length > 0 ? anakSummaries[selectedAnakIdx] : null;
+  const isMale = (jenisKelamin: string | null | undefined) => jenisKelamin === "laki_laki" || jenisKelamin === "L";
 
   return (
     <div className={styles.page}>
@@ -146,6 +167,9 @@ export default function MobileParentDashboard() {
         {/* Stats Overview */}
         {stats && (
           <section className={styles.statsSection}>
+            <p className={styles.lastUpdated}>
+              Update terakhir: {stats.lastUpdateDate ? new Date(stats.lastUpdateDate).toLocaleDateString("id-ID") : "Belum ada"}
+            </p>
             <div className={styles.statsGrid}>
               <div className={styles.statCard}>
                 <div className={styles.statIconWrap} data-color="blue">
@@ -186,7 +210,7 @@ export default function MobileParentDashboard() {
 
         {/* Selected Child Growth Card */}
         {currentAnak ? (
-          <section className={styles.growthSection}>
+          <section id="growth-section" className={styles.growthSection}>
             <h2 className={styles.sectionTitle}>Status Pertumbuhan {currentAnak.anak.nama}</h2>
 
             <div className={styles.growthCard}>
@@ -194,13 +218,13 @@ export default function MobileParentDashboard() {
               <div className={styles.childHeader}>
                 <div className={styles.childIcon} data-status={getStatusType(currentAnak)}>
                   <span className={styles.icon} style={{ fontSize: "2rem" }}>
-                    {currentAnak.anak.jenis_kelamin === "L" ? "face" : "face_3"}
+                    {isMale(currentAnak.anak.jenis_kelamin) ? "face" : "face_3"}
                   </span>
                 </div>
                 <div className={styles.childMeta}>
                   <h3 className={styles.childName}>{currentAnak.anak.nama}</h3>
                   <p className={styles.childAge}>
-                    {currentAnak.anak.jenis_kelamin === "L" ? "Laki-laki" : "Perempuan"} •{" "}
+                    {isMale(currentAnak.anak.jenis_kelamin) ? "Laki-laki" : "Perempuan"} •{" "}
                     {calculateAge(currentAnak.anak.tanggal_lahir)}
                   </p>
                 </div>
@@ -351,15 +375,14 @@ export default function MobileParentDashboard() {
                     info
                   </span>
                   <p>Belum ada data pertumbuhan untuk {currentAnak.anak.nama}.</p>
-                  <Link to="/parent/dashboard" className={styles.primaryBtn}>
-                    Tambah Data Pertumbuhan
+                  <Link to={`/m/parent/anak/${currentAnak.anak.id}`} className={styles.primaryBtn}>
+                    Lihat Profil Anak
                   </Link>
                 </div>
               )}
 
-              {/* Link to desktop detail */}
-              <Link to="/parent/dashboard" className={styles.detailBtn}>
-                <span>Lihat Grafik & Kelola Data</span>
+              <Link to={`/m/parent/anak/${currentAnak.anak.id}`} className={styles.detailBtn}>
+                <span>Lihat Profil Lengkap</span>
                 <span className={styles.icon} style={{ fontSize: "1rem" }}>
                   arrow_forward
                 </span>
@@ -368,15 +391,15 @@ export default function MobileParentDashboard() {
           </section>
         ) : (
           /* No children at all */
-          <section className={styles.growthSection}>
+          <section id="growth-section" className={styles.growthSection}>
             <div className={styles.emptyCard}>
               <span className={styles.icon} style={{ fontSize: "3rem", color: "#94a3b8" }}>
                 child_care
               </span>
               <h3>Belum ada data anak</h3>
-              <p className={styles.emptyText}>Silakan tambahkan data anak terlebih dahulu di Dashboard Desktop.</p>
-              <Link to="/parent/dashboard" className={styles.primaryBtn}>
-                Buka Dashboard Desktop
+              <p className={styles.emptyText}>Silakan tambahkan data anak melalui menu Tambah.</p>
+              <Link to="/m/parent/anak/new" className={styles.primaryBtn}>
+                Tambah Anak
               </Link>
             </div>
           </section>
@@ -384,21 +407,21 @@ export default function MobileParentDashboard() {
 
         {/* All Children Quick List (if more than 1) */}
         {anakSummaries.length > 1 && (
-          <section className={styles.childListSection}>
+          <section id="children-list-section" className={styles.childListSection}>
             <h3 className={styles.sectionTitleSm}>Semua Anak</h3>
             <div className={styles.childList}>
               {anakSummaries.map((s: any, idx: number) => {
                 const statusType = getStatusType(s);
                 return (
-                  <button
+                  <Link
                     key={s.anak.id}
                     className={styles.childListItem}
                     data-border={statusType}
-                    onClick={() => setSelectedAnakIdx(idx)}
+                    to={`/m/parent/anak/${s.anak.id}`}
                   >
                     <div className={styles.childListLeft}>
                       <div className={styles.childListIcon}>
-                        <span className={styles.icon}>{s.anak.jenis_kelamin === "L" ? "face" : "face_3"}</span>
+                        <span className={styles.icon}>{isMale(s.anak.jenis_kelamin) ? "face" : "face_3"}</span>
                       </div>
                       <div>
                         <p className={styles.childListName}>{s.anak.nama}</p>
@@ -411,7 +434,7 @@ export default function MobileParentDashboard() {
                     <div className={styles.childListBadge} data-status={statusType}>
                       {getStatusLabel(s)}
                     </div>
-                  </button>
+                  </Link>
                 );
               })}
             </div>
@@ -419,27 +442,7 @@ export default function MobileParentDashboard() {
         )}
       </main>
 
-      {/* Bottom Navigation */}
-      <nav className={styles.bottomNav}>
-        <div className={styles.navInner}>
-          <Link className={styles.navItemActive} to="/m/parent/dashboard">
-            <span className={styles.iconFilled}>home</span>
-            <span>Beranda</span>
-          </Link>
-          <Link className={styles.navItem} to="/parent/dashboard">
-            <span className={styles.icon}>monitoring</span>
-            <span>Grafik</span>
-          </Link>
-          <Link className={styles.navItem} to="/parent/dashboard">
-            <span className={styles.icon}>edit_note</span>
-            <span>Kelola</span>
-          </Link>
-          <Link className={styles.navItem} to="/parent/dashboard">
-            <span className={styles.icon}>person</span>
-            <span>Akun</span>
-          </Link>
-        </div>
-      </nav>
+      <MobileParentNav />
     </div>
   );
 }

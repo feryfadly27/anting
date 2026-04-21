@@ -7,7 +7,8 @@
   background-color: #f8f9fa;
   color: #2C2420;
   min-height: 100vh;
-  padding-bottom: 5rem;
+  padding-bottom: calc(5rem + env(safe-area-inset-bottom));
+  font-size: clamp(14px, 1.1vw, 17px);
 }
 
 /* ===== Material Icon base ===== */
@@ -40,8 +41,7 @@
   align-items: center;
   justify-content: space-between;
   background: #fff;
-  padding: 1rem;
-  padding-bottom: 0.5rem;
+  padding: clamp(0.75rem, 2.4vw, 1rem) clamp(0.75rem, 2.6vw, 1rem) clamp(0.625rem, 2vw, 0.875rem);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -63,7 +63,7 @@
 .headerInfo { flex: 1; margin-left: 0.75rem; }
 
 .headerName {
-  font-size: 1.125rem;
+  font-size: clamp(1rem, 2.4vw, 1.25rem);
   font-weight: 700;
   line-height: 1.25;
   color: #2C2420;
@@ -71,7 +71,7 @@
 }
 
 .headerSubtext {
-  font-size: 0.75rem;
+  font-size: clamp(0.75rem, 1.8vw, 0.875rem);
   color: rgba(44, 36, 32, 0.55);
   margin: 0;
 }
@@ -82,6 +82,8 @@
   justify-content: center;
   width: 2.5rem;
   height: 2.5rem;
+  min-width: 44px;
+  min-height: 44px;
   border-radius: 0.5rem;
   background: #f1f5f9;
   color: #64748b;
@@ -94,24 +96,31 @@
 
 /* ===== Main ===== */
 .main {
-  max-width: 28rem;
+  width: 100%;
+  max-width: min(42rem, 100%);
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 clamp(0.75rem, 3vw, 1.25rem) clamp(0.75rem, 2.2vw, 1rem);
 }
 
 /* ===== Stats Section ===== */
 .statsSection { margin-top: 1rem; margin-bottom: 1.25rem; }
+.lastUpdated {
+  margin: 0 0 0.5rem;
+  font-size: clamp(0.68rem, 1.4vw, 0.75rem);
+  color: #64748b;
+}
+
 
 .statsGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
+  gap: clamp(0.5rem, 2vw, 0.875rem);
 }
 
 .statCard {
   background: #fff;
   border-radius: 0.75rem;
-  padding: 0.875rem;
+  padding: clamp(0.75rem, 2.4vw, 1rem);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
   border: 1px solid #f1f5f9;
   display: flex;
@@ -136,8 +145,8 @@
 .statIconWrap .icon { font-size: 1.25rem; }
 
 .statInfo { display: flex; flex-direction: column; }
-.statLabel { font-size: 0.6875rem; color: #64748b; font-weight: 500; }
-.statValue { font-size: 1.375rem; font-weight: 700; color: #2C2420; line-height: 1.2; }
+.statLabel { font-size: clamp(0.72rem, 1.6vw, 0.82rem); color: #64748b; font-weight: 600; }
+.statValue { font-size: clamp(1.2rem, 3.5vw, 1.65rem); font-weight: 700; color: #2C2420; line-height: 1.2; }
 
 /* ===== Tab Bar ===== */
 .tabBar {
@@ -154,9 +163,10 @@
 
 .tab,
 .tabActive {
-  padding: 0.375rem 0.875rem;
+  padding: clamp(0.42rem, 1.8vw, 0.5rem) clamp(0.85rem, 2.8vw, 1rem);
+  min-height: 44px;
   border-radius: 9999px;
-  font-size: 0.8125rem;
+  font-size: clamp(0.8rem, 1.9vw, 0.94rem);
   font-weight: 600;
   border: 1.5px solid #e2e8f0;
   background: #fff;
@@ -178,14 +188,14 @@
 .growthSection { margin-bottom: 1.5rem; }
 
 .sectionTitle {
-  font-size: 1.125rem;
+  font-size: clamp(1.02rem, 2.5vw, 1.25rem);
   font-weight: 700;
   margin: 0 0 0.75rem;
   color: #2C2420;
 }
 
 .sectionTitleSm {
-  font-size: 0.8125rem;
+  font-size: clamp(0.76rem, 1.9vw, 0.94rem);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -196,7 +206,7 @@
 .growthCard {
   background: #fff;
   border-radius: 0.75rem;
-  padding: 1.25rem;
+  padding: clamp(0.95rem, 3vw, 1.375rem);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
   border: 1px solid #f1f5f9;
 }
@@ -228,7 +238,7 @@
 .childMeta { flex: 1; min-width: 0; }
 
 .childName {
-  font-size: 1rem;
+  font-size: clamp(0.95rem, 2.2vw, 1.125rem);
   font-weight: 700;
   margin: 0;
   color: #2C2420;
@@ -238,7 +248,7 @@
 }
 
 .childAge {
-  font-size: 0.6875rem;
+  font-size: clamp(0.7rem, 1.7vw, 0.8125rem);
   color: #64748b;
   margin: 0.125rem 0 0;
 }
@@ -246,7 +256,7 @@
 .statusBadge {
   padding: 0.25rem 0.625rem;
   border-radius: 9999px;
-  font-size: 0.625rem;
+  font-size: clamp(0.65rem, 1.5vw, 0.75rem);
   font-weight: 700;
   white-space: nowrap;
   flex-shrink: 0;
@@ -257,7 +267,7 @@
 .statusBadge[data-status="danger"] { background: rgba(220, 53, 69, 0.1); color: #dc3545; }
 
 .updateLabel {
-  font-size: 0.75rem;
+  font-size: clamp(0.75rem, 1.8vw, 0.875rem);
   color: #64748b;
   margin: 0 0 0.75rem;
 }
@@ -266,7 +276,7 @@
 .measureGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.625rem;
+  gap: clamp(0.5rem, 1.8vw, 0.75rem);
   margin-bottom: 1rem;
 }
 
@@ -276,11 +286,11 @@
   gap: 0.5rem;
   background: #f8fafc;
   border-radius: 0.5rem;
-  padding: 0.625rem;
+  padding: clamp(0.55rem, 2vw, 0.75rem);
 }
 
 .measureVal {
-  font-size: 1rem;
+  font-size: clamp(0.95rem, 2.2vw, 1.125rem);
   font-weight: 700;
   color: #2C2420;
   margin: 0;
@@ -288,7 +298,7 @@
 }
 
 .measureLabel {
-  font-size: 0.625rem;
+  font-size: clamp(0.66rem, 1.5vw, 0.75rem);
   color: #64748b;
   margin: 0;
 }
@@ -306,13 +316,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.8125rem;
+  font-size: clamp(0.78rem, 1.8vw, 0.9375rem);
   font-weight: 500;
   margin-bottom: 0.25rem;
 }
 
 .zscoreCategory {
-  font-size: 0.6875rem;
+  font-size: clamp(0.66rem, 1.5vw, 0.8125rem);
   color: #94a3b8;
   font-weight: 400;
 }
@@ -363,21 +373,21 @@
   display: flex;
   align-items: center;
   gap: 0.375rem;
-  font-size: 0.75rem;
+  font-size: clamp(0.74rem, 1.8vw, 0.875rem);
   font-weight: 700;
   color: #dc3545;
   margin-bottom: 0.25rem;
 }
 
 .alertItem {
-  font-size: 0.75rem;
+  font-size: clamp(0.72rem, 1.7vw, 0.875rem);
   color: #6b3a3a;
   margin: 0.125rem 0 0;
   padding-left: 1.375rem;
 }
 
 .recordCount {
-  font-size: 0.6875rem;
+  font-size: clamp(0.68rem, 1.5vw, 0.8125rem);
   color: #94a3b8;
   margin-top: 0.75rem;
   text-align: right;
@@ -403,14 +413,15 @@
   gap: 0.5rem;
   margin-top: 1rem;
   width: 100%;
-  padding: 0.625rem;
+  padding: 0.75rem;
+  min-height: 44px;
   background: rgba(0, 176, 240, 0.08);
   color: #00b0f0;
   font-weight: 700;
   border-radius: 0.5rem;
   border: none;
   cursor: pointer;
-  font-size: 0.875rem;
+  font-size: clamp(0.8rem, 1.9vw, 0.9375rem);
   text-decoration: none;
   transition: background 0.15s;
 }
@@ -422,7 +433,8 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.625rem 1.25rem;
+  padding: 0.75rem 1.25rem;
+  min-height: 44px;
   background: #00b0f0;
   color: #fff;
   font-weight: 700;
@@ -430,7 +442,7 @@
   border: none;
   cursor: pointer;
   text-decoration: none;
-  font-size: 0.875rem;
+  font-size: clamp(0.8rem, 1.9vw, 0.9375rem);
   transition: background 0.15s;
 }
 
@@ -447,13 +459,13 @@
 }
 
 .emptyCard h3 {
-  font-size: 1rem;
+  font-size: clamp(0.95rem, 2.3vw, 1.125rem);
   font-weight: 700;
   margin: 0.5rem 0 0.25rem;
 }
 
 .emptyText {
-  font-size: 0.8125rem;
+  font-size: clamp(0.8rem, 1.9vw, 0.9375rem);
   color: #64748b;
   margin-bottom: 1rem;
 }
@@ -512,14 +524,14 @@
 .childListIcon .icon { font-size: 1.25rem; }
 
 .childListName {
-  font-size: 0.875rem;
+  font-size: clamp(0.8rem, 1.8vw, 0.9375rem);
   font-weight: 700;
   color: #2C2420;
   margin: 0;
 }
 
 .childListAge {
-  font-size: 0.625rem;
+  font-size: clamp(0.64rem, 1.4vw, 0.75rem);
   color: #94a3b8;
   margin: 0.125rem 0 0;
 }
@@ -527,7 +539,7 @@
 .childListBadge {
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
-  font-size: 0.625rem;
+  font-size: clamp(0.62rem, 1.4vw, 0.75rem);
   font-weight: 700;
   flex-shrink: 0;
 }
@@ -544,7 +556,7 @@
   right: 0;
   background: #fff;
   border-top: 1px solid #f1f5f9;
-  padding: 0.5rem 1rem 1rem;
+  padding: 0.625rem 1rem calc(1rem + env(safe-area-inset-bottom));
   z-index: 50;
   box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.04);
 }
@@ -563,19 +575,96 @@
   gap: 0.15rem;
   text-decoration: none;
   color: #94a3b8;
-  font-size: 0.625rem;
+  font-size: clamp(0.62rem, 1.4vw, 0.75rem);
   font-weight: 500;
   transition: color 0.15s;
-  padding: 0.25rem 0.5rem;
+  padding: 0.375rem 0.5rem;
+  min-width: 64px;
+  min-height: 44px;
+  justify-content: center;
 }
 
 .navItem:hover { color: #00b0f0; }
-.navItem .icon { font-size: 1.375rem; }
+.navItem .icon { font-size: 1.5rem; }
 
 .navItemActive {
   composes: navItem;
   color: #00b0f0;
   font-weight: 700;
+}
+
+.navItemButton {
+  composes: navItem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.errorCard {
+  margin-top: 1rem;
+  background: #fff;
+  border: 1px solid #f1f5f9;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  text-align: center;
+}
+
+.errorCard h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.errorCard p {
+  margin: 0.5rem 0 1rem;
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+@media (max-width: 360px) {
+  .headerAvatar,
+  .headerNotif {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+
+  .measureGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .statusBadge {
+    padding: 0.2rem 0.5rem;
+  }
+}
+
+@media (min-width: 480px) {
+  .main {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+
+  .growthCard,
+  .emptyCard {
+    border-radius: 1rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .main {
+    max-width: 48rem;
+  }
+
+  .growthCard {
+    padding: 1.5rem;
+  }
+
+  .bottomNav {
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 48rem;
+    border: 1px solid #f1f5f9;
+    border-bottom: none;
+    border-radius: 1rem 1rem 0 0;
+  }
 }
 
 /* ===== Loading ===== */
