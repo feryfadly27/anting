@@ -3,7 +3,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog/di
 import { Button } from "./ui/button/button";
 import { Input } from "./ui/input/input";
 import { Label } from "./ui/label/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select/select";
 import type { Database } from "~/db/types";
 import styles from "./anak-form-dialog.module.css";
 
@@ -28,8 +27,6 @@ export function AnakFormDialog({ open, onOpenChange, onSubmit, anak, userId }: A
   const {
     register,
     handleSubmit,
-    setValue,
-    watch,
     reset,
     formState: { errors },
   } = useForm<FormData>({
@@ -39,8 +36,6 @@ export function AnakFormDialog({ open, onOpenChange, onSubmit, anak, userId }: A
       jenis_kelamin: anak?.jenis_kelamin || "laki_laki",
     },
   });
-
-  const jenisKelamin = watch("jenis_kelamin");
 
   const handleFormSubmit = (data: FormData) => {
     onSubmit({
@@ -78,15 +73,14 @@ export function AnakFormDialog({ open, onOpenChange, onSubmit, anak, userId }: A
 
           <div className={styles.field}>
             <Label htmlFor="jenis_kelamin">Jenis Kelamin</Label>
-            <Select value={jenisKelamin} onValueChange={(value) => setValue("jenis_kelamin", value as "laki_laki" | "perempuan")}>
-              <SelectTrigger>
-                <SelectValue placeholder="Pilih jenis kelamin" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="laki_laki">Laki-laki</SelectItem>
-                <SelectItem value="perempuan">Perempuan</SelectItem>
-              </SelectContent>
-            </Select>
+            <select
+              id="jenis_kelamin"
+              className={styles.select}
+              {...register("jenis_kelamin", { required: "Jenis kelamin wajib dipilih" })}
+            >
+              <option value="laki_laki">Laki-laki</option>
+              <option value="perempuan">Perempuan</option>
+            </select>
             {errors.jenis_kelamin && <span className={styles.error}>{errors.jenis_kelamin.message}</span>}
           </div>
 
