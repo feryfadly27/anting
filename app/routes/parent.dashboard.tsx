@@ -45,10 +45,10 @@ type ImunisasiRow = Database["public"]["Tables"]["imunisasi"]["Row"];
 
 export function meta({ }: Route.MetaArgs) {
   return [
-    { title: "Dashboard Orang Tua - SI Banting" },
+    { title: "Dashboard Orang Tua - Anting" },
     {
       name: "description",
-      content: "Dashboard untuk orang tua di SI Banting",
+      content: "Dashboard untuk orang tua di Anting",
     },
   ];
 }

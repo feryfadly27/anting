@@ -22,10 +22,6 @@ export function MobileCadreNav() {
           <span className={styles.icon}>analytics</span>
           <span>Rekap</span>
         </Link>
-        <Link className={styles.navItem} to="/cadre/dashboard">
-          <span className={styles.icon}>desktop_windows</span>
-          <span>Desktop</span>
-        </Link>
       </div>
     </nav>
   );

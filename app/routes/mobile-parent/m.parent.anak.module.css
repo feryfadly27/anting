@@ -1,4 +1,5 @@
 .page {
+  font-size: 1.2em;
   min-height: 100vh;
   background: #f8f9fa;
   padding-bottom: calc(5rem + env(safe-area-inset-bottom));
@@ -15,14 +16,14 @@
 
 .title {
   margin: 0;
-  font-size: 1.05rem;
+  font-size: 1.16rem;
   font-weight: 700;
   color: #2c2420;
 }
 
 .subtitle {
   margin: 0.25rem 0 0;
-  font-size: 0.78rem;
+  font-size: 0.92rem;
   color: #64748b;
 }
 
@@ -96,20 +97,20 @@
 .childListName {
   margin: 0;
   color: #2c2420;
-  font-size: 0.88rem;
+  font-size: 1rem;
   font-weight: 700;
 }
 
 .childListAge {
   margin: 0.15rem 0 0;
   color: #94a3b8;
-  font-size: 0.74rem;
+  font-size: 0.86rem;
 }
 
 .childListBadge {
   padding: 0.25rem 0.5rem;
   border-radius: 0.3rem;
-  font-size: 0.7rem;
+  font-size: 0.82rem;
   font-weight: 700;
   flex-shrink: 0;
 }
@@ -151,6 +152,7 @@
   color: #fff;
   font-weight: 700;
   text-decoration: none;
+  font-size: 0.96rem;
 }
 
 .loadingWrap {

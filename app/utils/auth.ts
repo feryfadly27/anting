@@ -104,11 +104,11 @@ export async function getCurrentUser(): Promise<User | null> {
 export function getDashboardPath(role: UserRole): string {
   switch (role) {
     case "orang_tua":
-      return "/parent/dashboard";
+      return "/m/parent/dashboard";
     case "kader":
       return "/m/cadre/dashboard";
     case "puskesmas":
-      return "/puskesmas/dashboard";
+      return "/m/puskesmas/dashboard";
     default:
       return "/";
   }

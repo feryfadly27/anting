@@ -20,8 +20,8 @@ const parentApi = {
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Daftar Anak - SI Banting" },
-    { name: "description", content: "Daftar profil anak pada SI Banting versi mobile" },
+    { title: "Daftar Anak - Anting" },
+    { name: "description", content: "Daftar profil anak pada Anting versi mobile" },
   ];
 }
 

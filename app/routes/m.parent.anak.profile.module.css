@@ -2,6 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
 
 .page {
+  font-size: 1.2em;
   font-family: 'Public Sans', sans-serif;
   background: #f8f9fa;
   min-height: 100vh;
@@ -46,14 +47,14 @@
 
 .title {
   margin: 0;
-  font-size: clamp(1rem, 2.4vw, 1.2rem);
+  font-size: clamp(1.1rem, 2.6vw, 1.3rem);
   font-weight: 700;
 }
 
 .subtitle {
   margin: 0.2rem 0 0;
   color: #64748b;
-  font-size: clamp(0.75rem, 1.8vw, 0.88rem);
+  font-size: clamp(0.85rem, 2vw, 0.98rem);
 }
 
 .main {
@@ -75,7 +76,7 @@
 
 .sectionTitle {
   margin: 0 0 0.6rem;
-  font-size: 0.95rem;
+  font-size: 1.06rem;
   font-weight: 700;
 }
 
@@ -94,31 +95,31 @@
 .statLabel {
   display: block;
   color: #64748b;
-  font-size: 0.72rem;
+  font-size: 0.84rem;
 }
 
 .statValue {
   display: block;
-  font-size: 1.15rem;
+  font-size: 1.26rem;
   font-weight: 700;
 }
 
 .detailList p {
   margin: 0.2rem 0;
-  font-size: 0.86rem;
+  font-size: 0.96rem;
 }
 
 .muted {
   margin: 0;
   color: #64748b;
-  font-size: 0.86rem;
+  font-size: 0.96rem;
 }
 
 .alertList {
   margin: 0;
   padding-left: 1rem;
   color: #b91c1c;
-  font-size: 0.84rem;
+  font-size: 0.94rem;
 }
 
 .historyList {
@@ -149,7 +150,7 @@
   border: 1px solid #dbe3ec;
   background: #fff;
   color: #334155;
-  font-size: 0.8rem;
+  font-size: 0.92rem;
   padding: 0.5rem 0.6rem;
 }
 
@@ -162,14 +163,14 @@
 
 .historyTitle {
   margin: 0;
-  font-size: 0.84rem;
+  font-size: 0.95rem;
   font-weight: 700;
   color: #1e293b;
 }
 
 .historyMeta {
   margin: 0.15rem 0 0;
-  font-size: 0.76rem;
+  font-size: 0.88rem;
   color: #64748b;
 }
 
@@ -178,7 +179,7 @@
   border: none;
   background: transparent;
   color: #0284c7;
-  font-size: 0.82rem;
+  font-size: 0.94rem;
   font-weight: 700;
   padding: 0;
   cursor: pointer;
@@ -245,7 +246,7 @@
 }
 
 .formLabel {
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: #64748b;
 }
@@ -256,7 +257,7 @@
   border: 1px solid #dbe3ec;
   background: #fff;
   color: #334155;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   padding: 0.55rem 0.65rem;
 }
 
@@ -276,7 +277,7 @@
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 0.86rem;
+  font-size: 0.96rem;
 }
 
 .primaryBtn {

@@ -1,6 +1,6 @@
 {
-  "name": "SI Banting",
-  "short_name": "SIBanting",
+  "name": "Anting (Anak Tanpa Stunting)",
+  "short_name": "Anting",
   "description": "Sistem monitoring pertumbuhan anak untuk orang tua, kader, dan puskesmas.",
   "start_url": "/m/parent/dashboard",
   "scope": "/",

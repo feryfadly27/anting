@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import type { Route } from "./+types/m.cadre.dashboard";
-import { getCurrentUser } from "~/utils/auth";
+import { getCurrentUser, logout } from "~/utils/auth";
 import { toast } from "~/hooks/use-toast";
 import { MobileCadreNav } from "~/components/mobile-cadre-nav";
 import styles from "./m.cadre.dashboard.module.css";
@@ -28,7 +28,7 @@ type CadreStats = {
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Beranda Kader - SI Banting" },
+    { title: "Beranda Kader - Anting" },
     { name: "description", content: "Dashboard mobile kader posyandu" },
   ];
 }
@@ -76,6 +76,11 @@ export default function MobileCadreDashboard() {
     if (wilayahId) loadStats(wilayahId);
   }, [wilayahId]);
 
+  const handleLogout = async () => {
+    await logout();
+    navigate("/login", { replace: true });
+  };
+
   if (loading && !stats) {
     return (
       <div className={styles.loadingPage}>
@@ -112,8 +117,8 @@ export default function MobileCadreDashboard() {
           <h1 className={styles.headerName}>Halo, {userName}</h1>
           <p className={styles.headerSub}>Ringkasan wilayah binaan Anda</p>
         </div>
-        <button type="button" className={styles.headerBtn} onClick={() => navigate("/cadre/dashboard")} aria-label="Buka versi desktop">
-          <span className={styles.icon}>desktop_windows</span>
+        <button type="button" className={styles.headerBtn} onClick={handleLogout} aria-label="Logout">
+          <span className={styles.icon}>logout</span>
         </button>
       </header>
 

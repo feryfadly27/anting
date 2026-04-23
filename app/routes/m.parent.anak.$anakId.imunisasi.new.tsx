@@ -23,7 +23,7 @@ const parentApi = {
 };
 
 export function meta({}: Route.MetaArgs) {
-  return [{ title: "Tambah Imunisasi - SI Banting" }];
+  return [{ title: "Tambah Imunisasi - Anting" }];
 }
 
 export default function MobileAddImunisasiPage() {

@@ -29,8 +29,8 @@ type GrowthTrendPoint = {
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Status Pertumbuhan - SI Banting" },
-    { name: "description", content: "Grafik status pertumbuhan anak di SI Banting" },
+    { title: "Status Pertumbuhan - Anting" },
+    { name: "description", content: "Grafik status pertumbuhan anak di Anting" },
   ];
 }
 

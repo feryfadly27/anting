@@ -23,7 +23,7 @@ const parentApi = {
 };
 
 export function meta({}: Route.MetaArgs) {
-  return [{ title: "Tambah Pemeriksaan BB & TB - SI Banting" }];
+  return [{ title: "Tambah Pemeriksaan BB & TB - Anting" }];
 }
 
 export default function MobileAddPertumbuhanPage() {

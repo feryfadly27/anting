@@ -8,10 +8,10 @@ import { toast } from "~/hooks/use-toast";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Daftar - SI Banting" },
+    { title: "Daftar - Anting" },
     {
       name: "description",
-      content: "Buat akun baru di SI Banting",
+      content: "Buat akun baru di Anting",
     },
   ];
 }
@@ -158,7 +158,7 @@ export default function Register() {
       <div className={styles.registerContainer}>
         <div className={styles.logoSection}>
           <Heart className={styles.logoIcon} />
-          <h1 className={styles.title}>Daftar SI Banting</h1>
+          <h1 className={styles.title}>Daftar Anting</h1>
           <p className={styles.subtitle}>Mulai pantau kesehatan bayi Anda</p>
         </div>
 

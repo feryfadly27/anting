@@ -1,4 +1,4 @@
-const CACHE_VERSION = "sibanting-v2";
+const CACHE_VERSION = "sibanting-v4";
 const APP_SHELL_CACHE = `${CACHE_VERSION}-shell`;
 const API_CACHE = `${CACHE_VERSION}-api`;
 
@@ -9,6 +9,10 @@ const APP_SHELL_ASSETS = [
   "/m/cadre/dashboard",
   "/m/cadre/anak",
   "/m/cadre/rekap",
+  "/m/puskesmas/dashboard",
+  "/m/puskesmas/anak",
+  "/m/puskesmas/wilayah",
+  "/m/puskesmas/kader",
   "/manifest.webmanifest",
   "/offline.html",
   "/favicon.svg",

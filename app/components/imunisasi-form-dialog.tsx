@@ -4,7 +4,7 @@ import { Button } from "./ui/button/button";
 import { Input } from "./ui/input/input";
 import { Label } from "./ui/label/label";
 import type { Database } from "~/db/types";
-import styles from "./anak-form-dialog.module.css";
+import styles from "./record-form-dialog.module.css";
 
 type ImunisasiRow = Database["public"]["Tables"]["imunisasi"]["Row"];
 type ImunisasiInsert = Database["public"]["Tables"]["imunisasi"]["Insert"];
@@ -51,8 +51,9 @@ export function ImunisasiFormDialog({ open, onOpenChange, onSubmit, imunisasi, a
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className={styles.dialog}>
-        <DialogHeader>
+        <DialogHeader className={styles.header}>
           <DialogTitle>{imunisasi ? "Edit Data Imunisasi" : "Tambah Data Imunisasi"}</DialogTitle>
+          <p className={styles.subtitle}>Catat jenis imunisasi dan tanggal pemberian.</p>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(handleFormSubmit)} className={styles.form}>
@@ -60,6 +61,7 @@ export function ImunisasiFormDialog({ open, onOpenChange, onSubmit, imunisasi, a
             <Label htmlFor="nama_imunisasi">Nama Imunisasi</Label>
             <Input
               id="nama_imunisasi"
+              className={styles.input}
               {...register("nama_imunisasi", { required: "Nama imunisasi wajib diisi" })}
               placeholder="Contoh: BCG, Polio, DPT-HB-Hib"
             />
@@ -71,16 +73,19 @@ export function ImunisasiFormDialog({ open, onOpenChange, onSubmit, imunisasi, a
             <Input
               id="tanggal"
               type="date"
+              className={styles.input}
               {...register("tanggal", { required: "Tanggal imunisasi wajib diisi" })}
             />
             {errors.tanggal && <span className={styles.error}>{errors.tanggal.message}</span>}
           </div>
 
           <div className={styles.actions}>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+            <Button type="button" variant="outline" className={styles.actionBtn} onClick={() => onOpenChange(false)}>
               Batal
             </Button>
-            <Button type="submit">{imunisasi ? "Simpan Perubahan" : "Tambah Data"}</Button>
+            <Button type="submit" className={`${styles.actionBtn} ${styles.submitBtn}`}>
+              {imunisasi ? "Simpan Perubahan" : "Simpan Data"}
+            </Button>
           </div>
         </form>
       </DialogContent>

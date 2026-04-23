@@ -130,6 +130,72 @@ export interface WilayahStats {
   prevalensi: number;
 }
 
+export interface AnakPuskesmasItem {
+  id: string;
+  nama: string;
+  tanggal_lahir: string;
+  jenis_kelamin: string;
+  parent_name: string | null;
+  wilayah_name: string | null;
+  latest_pengukuran: string | null;
+  latest_berat_badan: number | null;
+  latest_tinggi_badan: number | null;
+  total_pertumbuhan: number;
+  total_imunisasi: number;
+}
+
+export async function getAllAnakForPuskesmas(): Promise<AnakPuskesmasItem[]> {
+  try {
+    const data = await prisma.anak.findMany({
+      orderBy: { nama: "asc" },
+      include: {
+        user: {
+          select: {
+            name: true,
+            wilayah: {
+              select: {
+                nama_wilayah: true,
+              },
+            },
+          },
+        },
+        pertumbuhan: {
+          orderBy: { tanggal_pengukuran: "desc" },
+          take: 1,
+          select: {
+            tanggal_pengukuran: true,
+            berat_badan: true,
+            tinggi_badan: true,
+          },
+        },
+        _count: {
+          select: {
+            pertumbuhan: true,
+            imunisasi: true,
+          },
+        },
+      },
+    });
+
+    return data.map((anak) => ({
+      id: anak.id,
+      nama: anak.nama,
+      tanggal_lahir: anak.tanggal_lahir.toISOString(),
+      jenis_kelamin: anak.jenis_kelamin,
+      parent_name: anak.user?.name ?? null,
+      wilayah_name: anak.user?.wilayah?.nama_wilayah ?? null,
+      latest_pengukuran: anak.pertumbuhan[0]?.tanggal_pengukuran?.toISOString() ?? null,
+      latest_berat_badan: anak.pertumbuhan[0]?.berat_badan ?? null,
+      latest_tinggi_badan: anak.pertumbuhan[0]?.tinggi_badan ?? null,
+      total_pertumbuhan: anak._count.pertumbuhan,
+      total_imunisasi: anak._count.imunisasi,
+    }));
+  } catch (error) {
+    console.error("Error getting all anak for puskesmas:", error);
+    return [];
+  }
+}
+
 export async function getStatsByWilayah(wilayahId?: string): Promise<WilayahStats[]> {
   try {
     const wilayahData = await prisma.wilayah.findMany({

@@ -31,10 +31,10 @@ const cadreApi = {
 
 export function meta({ }: Route.MetaArgs) {
   return [
-    { title: "Dashboard Kader Posyandu - SI Banting" },
+    { title: "Dashboard Kader Posyandu - Anting" },
     {
       name: "description",
-      content: "Dashboard untuk Kader Posyandu di SI Banting",
+      content: "Dashboard untuk Kader Posyandu di Anting",
     },
   ];
 }

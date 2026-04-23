@@ -3,95 +3,99 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--color-brand-2) 0%, var(--color-accent-1) 100%);
-  padding: var(--space-5);
+  background: #f8f9fa;
+  padding: 1rem;
 }
 
 .registerContainer {
-  background: var(--color-neutral-1);
-  padding: var(--space-8);
-  border-radius: var(--radius-6);
-  box-shadow: var(--shadow-4);
+  background: #fff;
+  padding: 1.15rem;
+  border-radius: 0.95rem;
+  border: 1px solid #e2e8f0;
   width: 100%;
-  max-width: 450px;
+  max-width: 29rem;
 }
 
 .logoSection {
   text-align: center;
-  margin-bottom: var(--space-6);
+  margin-bottom: 1rem;
 }
 
 .logoIcon {
-  width: 56px;
-  height: 56px;
-  color: var(--color-brand-9);
-  margin: 0 auto var(--space-3);
+  width: 2.6rem;
+  height: 2.6rem;
+  color: #00b0f0;
+  margin: 0 auto 0.45rem;
 }
 
 .title {
-  font: var(--font-heading);
-  color: var(--color-neutral-12);
-  margin-bottom: var(--space-2);
+  margin: 0;
+  font-size: clamp(1.2rem, 3.2vw, 1.45rem);
+  font-weight: 800;
+  color: #0f172a;
 }
 
 .subtitle {
-  font: var(--font-body);
-  color: var(--color-neutral-11);
+  margin: 0.28rem 0 0;
+  font-size: 0.93rem;
+  color: #64748b;
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: var(--space-5);
+  gap: 0.9rem;
 }
 
 .formGroup {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: 0.4rem;
 }
 
 .label {
-  font: var(--font-body);
+  font-size: 0.89rem;
   font-weight: 600;
-  color: var(--color-neutral-12);
+  color: #334155;
 }
 
 .input {
-  padding: var(--space-3) var(--space-4);
-  border: 2px solid var(--color-neutral-6);
-  border-radius: var(--radius-3);
-  font: var(--font-body);
-  color: var(--color-neutral-12);
-  background: var(--color-neutral-1);
-  transition: border-color 0.2s var(--ease);
+  padding: 0.72rem 0.84rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.65rem;
+  font-size: 0.94rem;
+  color: #0f172a;
+  background: #fff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .input:focus {
   outline: none;
-  border-color: var(--color-accent-9);
+  border-color: #00b0f0;
+  box-shadow: 0 0 0 3px rgba(0, 176, 240, 0.14);
 }
 
 .input::placeholder {
-  color: var(--color-neutral-9);
+  color: #94a3b8;
 }
 
 .submitButton {
-  margin-top: var(--space-2);
+  margin-top: 0.2rem;
   width: 100%;
-  padding: var(--space-3) var(--space-5);
-  background: var(--color-accent-9);
-  color: var(--color-accent-contrast);
+  padding: 0.72rem 0.9rem;
+  background: #00b0f0;
+  color: #fff;
   border: none;
-  border-radius: var(--radius-3);
-  font: var(--font-body);
-  font-weight: 600;
+  border-radius: 0.65rem;
+  font-size: 0.95rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: background 0.2s var(--ease);
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .submitButton:hover:not(:disabled) {
-  background: var(--color-accent-10);
+  background: #0098cf;
+  transform: translateY(-1px);
 }
 
 .submitButton:disabled {
@@ -102,65 +106,68 @@
 .divider {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  margin: var(--space-5) 0;
+  gap: 0.6rem;
+  margin: 1rem 0;
 }
 
 .dividerLine {
   flex: 1;
   height: 1px;
-  background: var(--color-neutral-6);
+  background: #e2e8f0;
 }
 
 .dividerText {
-  font: var(--font-caption);
-  color: var(--color-neutral-10);
+  font-size: 0.8rem;
+  color: #94a3b8;
 }
 
 .loginPrompt {
   text-align: center;
-  font: var(--font-body);
-  color: var(--color-neutral-11);
+  font-size: 0.9rem;
+  color: #64748b;
 }
 
 .loginLink {
-  color: var(--color-accent-11);
-  font-weight: 600;
+  color: #0284c7;
+  font-weight: 700;
   text-decoration: none;
-  transition: color 0.2s var(--ease);
+  transition: color 0.2s ease;
 }
 
 .loginLink:hover {
-  color: var(--color-accent-9);
+  color: #0369a1;
   text-decoration: underline;
 }
 
 .errorMessage {
-  padding: var(--space-3) var(--space-4);
-  background: var(--color-error-3);
-  border: 1px solid var(--color-error-6);
-  border-radius: var(--radius-3);
-  color: var(--color-error-11);
-  font: var(--font-body);
-  font-size: var(--font-size-0);
+  padding: 0.65rem 0.8rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 0.6rem;
+  color: #b91c1c;
+  font-size: 0.88rem;
 }
 
 .infoBox {
-  margin-top: var(--space-5);
-  padding: var(--space-4);
-  background: var(--color-brand-2);
-  border: 1px solid var(--color-brand-6);
-  border-radius: var(--radius-3);
-  font: var(--font-caption);
-  color: var(--color-brand-11);
+  margin-top: 0.95rem;
+  padding: 0.8rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.7rem;
+  font-size: 0.8rem;
+  color: #475569;
+  line-height: 1.5;
 }
 
 @media (max-width: 768px) {
   .registerPage {
-    padding: var(--space-4);
+    align-items: flex-start;
+    padding: 0.9rem;
   }
 
   .registerContainer {
-    padding: var(--space-6);
+    margin-top: 0.4rem;
+    padding: 0.95rem;
+    max-width: 100%;
   }
 }

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
 import type { Route } from "./+types/m.parent.dashboard";
-import { getCurrentUser } from "~/utils/auth";
+import { getCurrentUser, logout } from "~/utils/auth";
 import { toast } from "~/hooks/use-toast";
 import { toIndonesianNutritionAlert, toIndonesianNutritionStatus } from "~/utils/nutrition-status";
 import { MobileParentNav } from "~/components/mobile-parent-nav";
@@ -22,8 +22,8 @@ const parentApi = {
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Dashboard Mobile - SI Banting" },
-    { name: "description", content: "Dashboard mobile untuk orang tua di SI Banting" },
+    { title: "Dashboard Mobile - Anting" },
+    { name: "description", content: "Dashboard mobile untuk orang tua di Anting" },
   ];
 }
 
@@ -102,6 +102,11 @@ export default function MobileParentDashboard() {
     if (userId) loadData();
   }, [userId]);
 
+  const handleLogout = async () => {
+    await logout();
+    navigate("/login", { replace: true });
+  };
+
   const loadData = async () => {
     try {
       setLoading(true);
@@ -155,11 +160,11 @@ export default function MobileParentDashboard() {
           </span>
         </div>
         <div className={styles.headerInfo}>
-          <h2 className={styles.headerName}>Halo, {userName}!</h2>
+          <h2 className={styles.headerName}>Halo Bunda {userName}</h2>
           <p className={styles.headerSubtext}>Semoga harimu menyenangkan.</p>
         </div>
-        <button className={styles.headerNotif} onClick={() => navigate("/parent/dashboard")}>
-          <span className={styles.icon}>desktop_windows</span>
+        <button className={styles.headerNotif} onClick={handleLogout} aria-label="Logout">
+          <span className={styles.icon}>logout</span>
         </button>
       </header>
 

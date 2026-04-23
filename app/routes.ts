@@ -15,8 +15,13 @@ export default [
   route("cadre/dashboard", "routes/cadre.dashboard.tsx"),
   route("m/cadre/dashboard", "routes/mobile-cadre/m.cadre.dashboard.tsx"),
   route("m/cadre/anak", "routes/mobile-cadre/m.cadre.anak.tsx"),
+  route("m/cadre/anak/:anakId", "routes/mobile-cadre/m.cadre.anak.$anakId.tsx"),
   route("m/cadre/rekap", "routes/mobile-cadre/m.cadre.rekap.tsx"),
   route("puskesmas/dashboard", "routes/puskesmas.dashboard.tsx"),
+  route("m/puskesmas/dashboard", "routes/mobile-puskesmas/m.puskesmas.dashboard.tsx"),
+  route("m/puskesmas/anak", "routes/mobile-puskesmas/m.puskesmas.anak.tsx"),
+  route("m/puskesmas/wilayah", "routes/mobile-puskesmas/m.puskesmas.wilayah.tsx"),
+  route("m/puskesmas/kader", "routes/mobile-puskesmas/m.puskesmas.kader.tsx"),
 
   // Auth API Routes
   route("api/auth/login", "routes/api.auth.login.tsx"),

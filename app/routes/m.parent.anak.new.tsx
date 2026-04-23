@@ -24,8 +24,8 @@ const parentApi = {
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Tambah Anak - SI Banting" },
-    { name: "description", content: "Tambah data anak dari aplikasi mobile SI Banting" },
+    { title: "Tambah Anak - Anting" },
+    { name: "description", content: "Tambah data anak dari aplikasi mobile Anting" },
   ];
 }
 

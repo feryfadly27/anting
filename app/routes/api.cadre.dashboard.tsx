@@ -1,5 +1,7 @@
 import { cadreService } from "~/db/services/cadre.service";
 import { getAuthUser } from "~/utils/auth.server";
+import { pertumbuhanService } from "~/db/services/pertumbuhan.service";
+import { imunisasiService } from "~/db/services/imunisasi.service";
 
 export async function loader({ request }: { request: Request }) {
     const user = await getAuthUser(request);
@@ -23,6 +25,24 @@ export async function loader({ request }: { request: Request }) {
         if (action === "recaps") {
             const data = await cadreService.getRecentMonthlyRecaps(wilayahId);
             return Response.json(data);
+        }
+        if (action === "anak-detail") {
+            const anakId = url.searchParams.get("anakId") || "";
+            if (!anakId) {
+                return Response.json({ error: "anakId is required" }, { status: 400 });
+            }
+
+            const anakList = await cadreService.getAnakByWilayah(wilayahId);
+            const anak = anakList.find((a: any) => a.id === anakId);
+            if (!anak) {
+                return Response.json({ error: "Forbidden" }, { status: 403 });
+            }
+
+            const [pertumbuhan, imunisasi] = await Promise.all([
+                pertumbuhanService.getPertumbuhanByAnakId(anakId),
+                imunisasiService.getImunisasiByAnakId(anakId),
+            ]);
+            return Response.json({ anak, pertumbuhan, imunisasi });
         }
 
         // Default: return all data

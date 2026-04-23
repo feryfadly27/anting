@@ -26,13 +26,13 @@
 
 .title {
   margin: 0;
-  font-size: 1.05rem;
+  font-size: 1.22rem;
   font-weight: 700;
 }
 
 .subtitle {
   margin: 0.25rem 0 0;
-  font-size: 0.78rem;
+  font-size: 0.96rem;
   color: #64748b;
 }
 
@@ -66,12 +66,12 @@
 
 .period {
   margin: 0;
-  font-size: 0.95rem;
+  font-size: 1.12rem;
   font-weight: 700;
 }
 
 .badge {
-  font-size: 0.65rem;
+  font-size: 0.83rem;
   font-weight: 700;
   padding: 0.2rem 0.45rem;
   border-radius: 0.3rem;
@@ -83,7 +83,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.5rem 0.75rem;
-  font-size: 0.78rem;
+  font-size: 0.95rem;
 }
 
 .label {
@@ -109,7 +109,7 @@
   margin-top: 0.65rem;
   padding-top: 0.55rem;
   border-top: 1px dashed #e2e8f0;
-  font-size: 0.72rem;
+  font-size: 0.89rem;
   color: #64748b;
   line-height: 1.5;
 }
@@ -118,7 +118,7 @@
   text-align: center;
   padding: 2rem;
   color: #64748b;
-  font-size: 0.9rem;
+  font-size: 1.04rem;
 }
 
 .loadingWrap {

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import type { Route } from "./+types/m.cadre.anak";
 import type { Database } from "~/db/types";
 import { getCurrentUser } from "~/utils/auth";
@@ -229,6 +229,12 @@ export default function MobileCadreAnakPage() {
                           </>
                         )}
                       </div>
+                      <Link className={styles.profileLink} to={`/m/cadre/anak/${anak.id}`}>
+                        <span className={styles.icon} style={{ fontSize: "1rem" }} aria-hidden>
+                          account_circle
+                        </span>
+                        Lihat profil lengkap
+                      </Link>
                       <div className={styles.actions}>
                         <button
                           type="button"

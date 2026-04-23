@@ -8,11 +8,10 @@ import { getCurrentUser, getDashboardPath } from "~/utils/auth";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "SI Banting - RKP Bayi Cegah Stunting" },
+    { title: "Anting - Anak Tanpa Stunting" },
     {
       name: "description",
-      content:
-        "Sistem Informasi Banting untuk pencegahan stunting pada bayi melalui manajemen data kesehatan terstruktur",
+      content: "Anting (Anak Tanpa Stunting) untuk pemantauan tumbuh kembang anak yang terstruktur.",
     },
   ];
 }
@@ -36,27 +35,21 @@ export default function Home() {
       <header className={styles.header}>
         <div className={styles.logo}>
           <Heart className={styles.logoIcon} />
-          <span className={styles.logoText}>SI Banting</span>
-        </div>
-        <div className={styles.headerActions}>
-          <Button variant="outline" onClick={() => navigate("/login")}>
-            Masuk
-          </Button>
-          <Button onClick={() => navigate("/register")}>Daftar</Button>
+          <span className={styles.logoText}>Anting</span>
         </div>
       </header>
 
       <section className={styles.hero}>
-        <h1 className={styles.heroTitle}>RKP Bayi Cegah Stunting</h1>
+        <h1 className={styles.heroTitle}>Anting</h1>
         <p className={styles.heroTagline}>
-          Sistem informasi kesehatan bayi yang membantu orang tua, kader posyandu, dan puskesmas dalam memantau dan
-          mencegah stunting melalui manajemen data kesehatan yang terstruktur
+          Akronim dari Anak Tanpa Stunting, membantu orang tua, kader posyandu, dan puskesmas memantau tumbuh kembang
+          anak secara terstruktur.
         </p>
         <div className={styles.heroCta}>
-          <Button size="lg" onClick={() => navigate("/register")}>
+          <Button size="lg" className={styles.primaryButton} onClick={() => navigate("/register")}>
             Mulai Sekarang
           </Button>
-          <Button size="lg" variant="outline" onClick={() => navigate("/login")}>
+          <Button size="lg" variant="outline" className={styles.secondaryButton} onClick={() => navigate("/login")}>
             Masuk ke Akun
           </Button>
         </div>
@@ -64,7 +57,7 @@ export default function Home() {
 
       <section className={styles.overview}>
         <div className={styles.overviewContainer}>
-          <h2 className={styles.overviewTitle}>Manfaat SI Banting</h2>
+          <h2 className={styles.overviewTitle}>Manfaat Anting (Anak Tanpa Stunting)</h2>
           <div className={styles.overviewGrid}>
             <div className={styles.overviewCard}>
               <Heart className={styles.cardIcon} />

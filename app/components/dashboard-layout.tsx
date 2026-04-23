@@ -62,7 +62,7 @@ export function DashboardLayout({ children, className }: DashboardLayoutProps) {
       <header className={styles.header}>
         <div className={styles.logo}>
           <Heart className={styles.logoIcon} />
-          <span className={styles.logoText}>SI Banting</span>
+          <span className={styles.logoText}>Anting</span>
         </div>
         <div className={styles.headerRight}>
           <div className={styles.userInfo}>

@@ -48,10 +48,10 @@ const puskesmasApi = {
 
 export function meta({ }: Route.MetaArgs) {
   return [
-    { title: "Dashboard Puskesmas - SI Banting" },
+    { title: "Dashboard Puskesmas - Anting" },
     {
       name: "description",
-      content: "Dashboard untuk Puskesmas di SI Banting",
+      content: "Dashboard untuk Puskesmas di Anting",
     },
   ];
 }

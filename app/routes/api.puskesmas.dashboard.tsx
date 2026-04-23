@@ -4,6 +4,7 @@ import {
     getStatsByWilayah,
     getMonthlyPrevalensi,
     getAllKaders,
+    getAllAnakForPuskesmas,
     createKader,
     updateKader,
     deleteKader,
@@ -37,6 +38,9 @@ export async function loader({ request }: { request: Request }) {
         }
         if (action === "kaders") {
             return Response.json(await getAllKaders());
+        }
+        if (action === "anak") {
+            return Response.json(await getAllAnakForPuskesmas());
         }
         if (action === "export") {
             return Response.json(await getExportData());

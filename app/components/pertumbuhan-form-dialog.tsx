@@ -4,7 +4,7 @@ import { Button } from "./ui/button/button";
 import { Input } from "./ui/input/input";
 import { Label } from "./ui/label/label";
 import type { Database } from "~/db/types";
-import styles from "./anak-form-dialog.module.css";
+import styles from "./record-form-dialog.module.css";
 
 type PertumbuhanRow = Database["public"]["Tables"]["pertumbuhan"]["Row"];
 type PertumbuhanInsert = Database["public"]["Tables"]["pertumbuhan"]["Insert"];
@@ -55,8 +55,9 @@ export function PertumbuhanFormDialog({ open, onOpenChange, onSubmit, pertumbuha
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className={styles.dialog}>
-        <DialogHeader>
+        <DialogHeader className={styles.header}>
           <DialogTitle>{pertumbuhan ? "Edit Data Pertumbuhan" : "Tambah Data Pertumbuhan"}</DialogTitle>
+          <p className={styles.subtitle}>Isi hasil pemeriksaan BB/TB sesuai pengukuran terbaru.</p>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(handleFormSubmit)} className={styles.form}>
@@ -65,6 +66,7 @@ export function PertumbuhanFormDialog({ open, onOpenChange, onSubmit, pertumbuha
             <Input
               id="tanggal_pengukuran"
               type="date"
+              className={styles.input}
               {...register("tanggal_pengukuran", { required: "Tanggal pengukuran wajib diisi" })}
             />
             {errors.tanggal_pengukuran && <span className={styles.error}>{errors.tanggal_pengukuran.message}</span>}
@@ -76,6 +78,7 @@ export function PertumbuhanFormDialog({ open, onOpenChange, onSubmit, pertumbuha
               id="berat_badan"
               type="number"
               step="0.01"
+              className={styles.input}
               {...register("berat_badan", {
                 required: "Berat badan wajib diisi",
                 min: { value: 0.1, message: "Berat badan minimal 0.1 kg" },
@@ -92,6 +95,7 @@ export function PertumbuhanFormDialog({ open, onOpenChange, onSubmit, pertumbuha
               id="tinggi_badan"
               type="number"
               step="0.01"
+              className={styles.input}
               {...register("tinggi_badan", {
                 required: "Tinggi badan wajib diisi",
                 min: { value: 10, message: "Tinggi badan minimal 10 cm" },
@@ -103,10 +107,12 @@ export function PertumbuhanFormDialog({ open, onOpenChange, onSubmit, pertumbuha
           </div>
 
           <div className={styles.actions}>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+            <Button type="button" variant="outline" className={styles.actionBtn} onClick={() => onOpenChange(false)}>
               Batal
             </Button>
-            <Button type="submit">{pertumbuhan ? "Simpan Perubahan" : "Tambah Data"}</Button>
+            <Button type="submit" className={`${styles.actionBtn} ${styles.submitBtn}`}>
+              {pertumbuhan ? "Simpan Perubahan" : "Simpan Data"}
+            </Button>
           </div>
         </form>
       </DialogContent>
