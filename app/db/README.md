@@ -93,23 +93,19 @@ users (1) ←--→ (0..n) anak
 
 ### 1. Konfigurasi Environment Variables
 
-Tambahkan credentials Supabase di file `.env`:
+Tambahkan koneksi PostgreSQL di file `.env`:
 
 ```env
-SUPABASE_PROJECT_URL=your_supabase_project_url
-SUPABASE_API_KEY=your_supabase_api_key
+DATABASE_URL="postgresql://postgres:your_password@127.0.0.1:5432/sir_kp_banting?schema=public"
 ```
 
 ### 2. Jalankan Migration
 
-Di Supabase Dashboard:
-1. Buka SQL Editor
-2. Salin isi file `migrations/001_initial_schema.sql`
-3. Jalankan query
+Gunakan Prisma migration command:
 
-Atau menggunakan Supabase CLI:
 ```bash
-supabase db reset
+npx prisma migrate deploy
+npx prisma generate
 ```
 
 ### 3. Verifikasi

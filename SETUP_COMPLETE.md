@@ -46,7 +46,7 @@ npm install
 
 # 2. Create .env file (copy template and edit)
 cp .env.example .env
-# Edit .env with your PostgreSQL connection and Supabase keys
+# Edit .env with your PostgreSQL connection
 
 # 3. Setup database (PostgreSQL must be running)
 npx prisma migrate deploy    # Apply migrations
@@ -214,36 +214,12 @@ cp .env.example .env
 DATABASE_URL="postgresql://postgres:your_password@127.0.0.1:5432/sir_kp_banting?schema=public"
 
 # ============================
-# SUPABASE (Optional - if using Supabase auth)
-# ============================
-# Server-side only (loaders/actions)
-SUPABASE_PROJECT_URL=your_supabase_project_url
-SUPABASE_API_KEY=your_supabase_api_key
-
-# Client-side (browser) - PUBLIC anon key only
-VITE_SUPABASE_PROJECT_URL=your_supabase_project_url
-VITE_SUPABASE_API_KEY=your_supabase_anon_key
-
-# ============================
 # APPLICATION (Optional)
 # ============================
 NODE_ENV=development
 ```
 
-### Step 3: Get Supabase Credentials (Optional)
-
-If using Supabase:
-
-1. Go to https://app.supabase.com/projects
-2. Create or select your project
-3. Navigate to **Settings** → **API**
-4. Copy:
-   - **Project URL** → `SUPABASE_PROJECT_URL`
-   - **Anon/Public Key** → `VITE_SUPABASE_API_KEY`
-
-⚠️ **IMPORTANT**: Use only the **anon/public key** for `VITE_*` variables, never the service role key.
-
-### Step 4: Verify Connection
+### Step 3: Verify Connection
 
 ```bash
 # Test PostgreSQL connection
@@ -498,7 +474,6 @@ Before deploying to production, verify:
 
 - [ ] PostgreSQL database is running and accessible
 - [ ] .env file has correct DATABASE_URL
-- [ ] .env file has production Supabase credentials (if applicable)
 - [ ] NODE_ENV=production in .env
 - [ ] Database migrations applied: `npx prisma db push --skip-generate`
 - [ ] Initial seed data loaded: `npx tsx prisma/seed.ts`
@@ -623,14 +598,9 @@ project/
 DATABASE_URL=postgresql://user:pass@host:5432/db_name
 ```
 
-### Optional (Supabase)
+### Optional
 
-```bash
-SUPABASE_PROJECT_URL=https://xxxx.supabase.co
-SUPABASE_API_KEY=your_key
-VITE_SUPABASE_PROJECT_URL=https://xxxx.supabase.co
-VITE_SUPABASE_API_KEY=your_key
-```
+Tidak ada environment variable tambahan wajib selain `DATABASE_URL` dan `NODE_ENV`.
 
 ### Application
 

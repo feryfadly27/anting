@@ -64,7 +64,6 @@ if not exist ".env" (
         echo.
         echo [WARNING] IMPORTANT: Edit .env file with your configuration
         echo   - DATABASE_URL: PostgreSQL connection string
-        echo   - SUPABASE_*: Optional, for Supabase integration
         echo.
         echo Example DATABASE_URL:
         echo   postgresql://postgres:password@localhost:5432/sir_kp_banting

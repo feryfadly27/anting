@@ -54,10 +54,6 @@ services:
     environment:
       NODE_ENV: production
       DATABASE_URL: "postgresql://postgres:your_secure_password_here@postgres:5432/sir_kp_banting?schema=public"
-      SUPABASE_PROJECT_URL: ${SUPABASE_PROJECT_URL:-}
-      SUPABASE_API_KEY: ${SUPABASE_API_KEY:-}
-      VITE_SUPABASE_PROJECT_URL: ${VITE_SUPABASE_PROJECT_URL:-}
-      VITE_SUPABASE_API_KEY: ${VITE_SUPABASE_API_KEY:-}
     ports:
       - "3000:3000"
     depends_on:
@@ -132,12 +128,6 @@ CMD ["npm", "start"]
 ```bash
 # Database - Use service name 'postgres' in Docker network
 DATABASE_URL="postgresql://postgres:your_secure_password_here@postgres:5432/sir_kp_banting?schema=public"
-
-# Supabase (optional)
-SUPABASE_PROJECT_URL=your_supabase_project_url
-SUPABASE_API_KEY=your_supabase_api_key
-VITE_SUPABASE_PROJECT_URL=your_supabase_project_url
-VITE_SUPABASE_API_KEY=your_supabase_anon_key
 
 # Application
 NODE_ENV=production

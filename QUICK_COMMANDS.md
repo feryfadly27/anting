@@ -404,12 +404,6 @@ npm audit fix
 # Database (REQUIRED)
 DATABASE_URL="postgresql://postgres:password@localhost:5432/sir_kp_banting?schema=public"
 
-# Supabase (Optional)
-SUPABASE_PROJECT_URL=https://xxxx.supabase.co
-SUPABASE_API_KEY=your_key
-VITE_SUPABASE_PROJECT_URL=https://xxxx.supabase.co
-VITE_SUPABASE_API_KEY=your_key
-
 # Application
 NODE_ENV=development|production
 PORT=3000

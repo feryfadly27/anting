@@ -144,14 +144,10 @@ Complete this checklist before starting installation to ensure smooth setup.
 
 ## Credentials & Configuration
 
-### Supabase (Optional)
+### Database Credentials
 
-- [ ] **If using Supabase Auth:**
-  - [ ] Supabase account created at https://supabase.com
-  - [ ] Supabase project created
-  - [ ] Project URL copied: `https://xxxx.supabase.co`
-  - [ ] Anon/Public API key copied
-  - [ ] Service role key ready (for admin operations)
+- [ ] PostgreSQL host, port, username, and password sudah siap
+- [ ] Nilai `DATABASE_URL` sudah disiapkan untuk file `.env`
 
 ### Default Test Credentials
 

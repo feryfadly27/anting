@@ -359,14 +359,9 @@ docker-compose up -d
 DATABASE_URL="postgresql://postgres:password@127.0.0.1:5432/sir_kp_banting?schema=public"
 ```
 
-### Optional (for Supabase integration)
+### Optional
 
-```bash
-SUPABASE_PROJECT_URL=your_url
-SUPABASE_API_KEY=your_key
-VITE_SUPABASE_PROJECT_URL=your_url
-VITE_SUPABASE_API_KEY=your_public_key
-```
+Tidak ada variabel tambahan wajib selain `DATABASE_URL`, `NODE_ENV`, dan `PORT`.
 
 ### Application
 
@@ -542,6 +537,5 @@ For technical support or questions:
 | [DOCKER_DEPLOYMENT.md](DOCKER_DEPLOYMENT.md)                                 | Container and production deployment        | 20 min    |
 | README.md                                                                    | This file - overview and index             | 10 min    |
 | [docs/SETUP_DATABASE.md](docs/SETUP_DATABASE.md)                             | Database-specific documentation            | 10 min    |
-| [docs/SUPABASE_AUTH_IMPLEMENTATION.md](docs/SUPABASE_AUTH_IMPLEMENTATION.md) | Authentication setup                       | 15 min    |
 
 **📌 Bookmark this page for future reference!**

@@ -44,10 +44,5 @@
   },
   "projectPrompts": {
     "promptsFolderName": "prompts"
-  },
-  "mcpServers": {
-    "supabase": {
-      "url": "https://mcp.supabase.com/mcp?project_ref=tysmaxbzncqxdkgejwwz"
-    }
   }
 }
