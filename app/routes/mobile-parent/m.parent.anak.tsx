@@ -104,7 +104,12 @@ export default function MobileParentAnakPage() {
   return (
     <div className={styles.page}>
       <header className={styles.header}>
-        <h1 className={styles.title}>Daftar Anak</h1>
+        <div className={styles.headerTop}>
+          <h1 className={styles.title}>Daftar Anak</h1>
+          <Link to="/m/parent/anak/new" className={styles.headerAddBtn}>
+            + Tambah Anak
+          </Link>
+        </div>
         <p className={styles.subtitle}>Pilih anak untuk melihat profil dan riwayat lengkap.</p>
       </header>
 

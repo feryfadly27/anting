@@ -1,4 +1,4 @@
-const CACHE_VERSION = "sibanting-v4";
+const CACHE_VERSION = "sibanting-v7";
 const APP_SHELL_CACHE = `${CACHE_VERSION}-shell`;
 const API_CACHE = `${CACHE_VERSION}-api`;
 
@@ -13,6 +13,7 @@ const APP_SHELL_ASSETS = [
   "/m/puskesmas/anak",
   "/m/puskesmas/wilayah",
   "/m/puskesmas/kader",
+  "/m/puskesmas/informasi",
   "/manifest.webmanifest",
   "/offline.html",
   "/favicon.svg",
@@ -48,6 +49,11 @@ function isApiRequest(request) {
   return request.method === "GET" && url.pathname.startsWith("/api/");
 }
 
+function isAuthApiRequest(request) {
+  const url = new URL(request.url);
+  return request.method === "GET" && url.pathname.startsWith("/api/auth/");
+}
+
 self.addEventListener("fetch", (event) => {
   const request = event.request;
   const url = new URL(request.url);
@@ -56,21 +62,49 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
+  if (isAuthApiRequest(request)) {
+    // Auth state must always be fresh and must never be served from cache.
+    event.respondWith(fetch(request));
+    return;
+  }
+
   if (isApiRequest(request)) {
     event.respondWith(
       caches.open(API_CACHE).then(async (cache) => {
-        const cached = await cache.match(request);
-        const networkFetch = fetch(request)
-          .then((response) => {
-            if (response.ok) {
-              cache.put(request, response.clone());
-            }
-            return response;
-          })
-          .catch(() => cached);
-
-        return cached || networkFetch;
+        try {
+          const response = await fetch(request);
+          if (response.ok) {
+            cache.put(request, response.clone());
+          }
+          return response;
+        } catch {
+          const cached = await cache.match(request);
+          if (cached) return cached;
+          return new Response("Offline", { status: 503, statusText: "Offline" });
+        }
       })
+    );
+    return;
+  }
+
+  // For document navigations, prefer network to avoid stale shell/route 404.
+  if (request.mode === "navigate") {
+    event.respondWith(
+      fetch(request)
+        .then(async (response) => {
+          if (response && response.ok) {
+            const cache = await caches.open(APP_SHELL_CACHE);
+            cache.put(request, response.clone());
+          }
+          return response;
+        })
+        .catch(async () => {
+          const cached = await caches.match(request);
+          if (cached) return cached;
+          const offline = await caches.match("/offline.html");
+          if (offline) return offline;
+          return new Response("Offline", { status: 503, statusText: "Offline" });
+        })
     );
     return;
   }

@@ -17,6 +17,7 @@ export async function login(email: string, password: string): Promise<User | nul
     const response = await fetch("/api/auth/login", {
       method: "POST",
       body: formData,
+      credentials: "same-origin",
     });
 
     if (!response.ok) {
@@ -48,6 +49,7 @@ export async function register(name: string, email: string, password: string, wi
     const response = await fetch("/api/auth/register", {
       method: "POST",
       body: formData,
+      credentials: "same-origin",
     });
 
     if (!response.ok) {
@@ -72,6 +74,7 @@ export async function logout(): Promise<void> {
   try {
     const response = await fetch("/api/auth/logout", {
       method: "POST",
+      credentials: "same-origin",
     });
 
     if (response.ok) {
@@ -89,7 +92,14 @@ export async function logout(): Promise<void> {
  */
 export async function getCurrentUser(): Promise<User | null> {
   try {
-    const response = await fetch("/api/auth/me");
+    const response = await fetch("/api/auth/me", {
+      credentials: "same-origin",
+      cache: "no-store",
+      headers: {
+        "Cache-Control": "no-cache",
+        Pragma: "no-cache",
+      },
+    });
 
     if (!response.ok) return null;
 

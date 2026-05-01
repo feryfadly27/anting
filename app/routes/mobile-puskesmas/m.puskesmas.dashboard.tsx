@@ -33,6 +33,23 @@ type KaderItem = {
   wilayah?: { nama_wilayah: string } | null;
 };
 
+type AnakItem = {
+  id: string;
+  nama: string;
+  tanggal_lahir: string;
+  jenis_kelamin: string;
+  parent_name: string | null;
+  wilayah_name: string | null;
+  latest_pengukuran: string | null;
+  latest_berat_badan: number | null;
+  latest_tinggi_badan: number | null;
+  latest_zscore_tbu: number | null;
+  latest_zscore_bbu: number | null;
+  latest_zscore_bbtb: number | null;
+  total_pertumbuhan: number;
+  total_imunisasi: number;
+};
+
 const puskesmasApi = {
   fetchWithError: async (url: string) => {
     const r = await fetch(url);
@@ -45,6 +62,7 @@ const puskesmasApi = {
   getStats: () => puskesmasApi.fetchWithError("/api/puskesmas/dashboard?action=stats"),
   getWilayahStats: () => puskesmasApi.fetchWithError("/api/puskesmas/dashboard?action=wilayah-stats"),
   getKaders: () => puskesmasApi.fetchWithError("/api/puskesmas/dashboard?action=kaders"),
+  getAnak: () => puskesmasApi.fetchWithError("/api/puskesmas/dashboard?action=anak"),
 };
 
 export function meta({}: Route.MetaArgs) {
@@ -60,6 +78,8 @@ export default function MobilePuskesmasDashboard() {
   const [stats, setStats] = useState<PuskesmasStats | null>(null);
   const [wilayahStats, setWilayahStats] = useState<WilayahStats[]>([]);
   const [kaders, setKaders] = useState<KaderItem[]>([]);
+  const [anakList, setAnakList] = useState<AnakItem[]>([]);
+  const [reportMonth, setReportMonth] = useState(() => new Date().toISOString().slice(0, 7));
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
 
@@ -67,18 +87,76 @@ export default function MobilePuskesmasDashboard() {
     return [...wilayahStats].sort((a, b) => b.prevalensi - a.prevalensi).slice(0, 5);
   }, [wilayahStats]);
 
+  const anakButuhPerhatian = useMemo(() => {
+    const now = Date.now();
+    return anakList
+      .map((anak) => {
+        const daysSince = anak.latest_pengukuran
+          ? Math.floor((now - new Date(anak.latest_pengukuran).getTime()) / (1000 * 60 * 60 * 24))
+          : 999;
+        const score =
+          ((anak.latest_zscore_tbu ?? 0) < -2 ? 3 : 0) +
+          ((anak.latest_zscore_bbu ?? 0) < -2 ? 2 : 0) +
+          ((anak.latest_zscore_bbtb ?? 0) < -2 ? 2 : 0) +
+          (anak.total_pertumbuhan === 0 ? 3 : 0) +
+          (daysSince > 90 ? 3 : daysSince > 60 ? 2 : daysSince > 30 ? 1 : 0) +
+          (anak.total_imunisasi === 0 ? 1 : 0);
+        const status = score >= 5 ? "tinggi" : score >= 3 ? "sedang" : "rendah";
+        return { ...anak, daysSince, score, status };
+      })
+      .filter((anak) => anak.score >= 2)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 6);
+  }, [anakList]);
+
+  const performaKaderWilayah = useMemo(() => {
+    const kaderCountByWilayah = new Map<string, number>();
+    for (const kader of kaders) {
+      const wilayahName = kader.wilayah?.nama_wilayah || "Tidak diketahui";
+      kaderCountByWilayah.set(wilayahName, (kaderCountByWilayah.get(wilayahName) || 0) + 1);
+    }
+    return wilayahStats
+      .map((w) => {
+        const kaderCount = kaderCountByWilayah.get(w.nama_wilayah) || 0;
+        const rasioBalitaPerKader = kaderCount > 0 ? Math.round(w.totalBalita / kaderCount) : w.totalBalita;
+        const status = kaderCount === 0 || rasioBalitaPerKader > 40 ? "perlu-perhatian" : "aktif";
+        return { ...w, kaderCount, rasioBalitaPerKader, status };
+      })
+      .sort((a, b) => b.totalBalita - a.totalBalita)
+      .slice(0, 6);
+  }, [kaders, wilayahStats]);
+
+  const laporanBulananPreview = useMemo(() => {
+    const [year, month] = reportMonth.split("-").map((v) => Number(v));
+    const monthLabel = new Date(year || 0, (month || 1) - 1, 1).toLocaleDateString("id-ID", {
+      month: "long",
+      year: "numeric",
+    });
+    return {
+      monthLabel,
+      totalBalita: stats?.totalBalita ?? 0,
+      totalKader: stats?.totalKader ?? 0,
+      prevalensiStunting: Number((stats?.prevalensiStunting ?? 0).toFixed(1)),
+      cakupanPemeriksaan: Number((stats?.cakupanPemeriksaan ?? 0).toFixed(1)),
+      wilayahPrioritas: topWilayah[0]?.nama_wilayah || "-",
+      anakPerluAtensi: anakButuhPerhatian.length,
+    };
+  }, [reportMonth, stats, topWilayah, anakButuhPerhatian]);
+
   const loadData = async () => {
     try {
       setLoading(true);
       setLoadError(null);
-      const [statsData, wilayahData, kadersData] = await Promise.all([
+      const [statsData, wilayahData, kadersData, anakData] = await Promise.all([
         puskesmasApi.getStats(),
         puskesmasApi.getWilayahStats(),
         puskesmasApi.getKaders(),
+        puskesmasApi.getAnak(),
       ]);
       setStats(statsData);
       setWilayahStats(Array.isArray(wilayahData) ? wilayahData : []);
       setKaders(Array.isArray(kadersData) ? kadersData : []);
+      setAnakList(Array.isArray(anakData) ? anakData : []);
     } catch (error) {
       console.error(error);
       setLoadError("Gagal memuat data puskesmas. Coba lagi.");
@@ -107,6 +185,11 @@ export default function MobilePuskesmasDashboard() {
   const handleLogout = async () => {
     await logout();
     navigate("/login", { replace: true });
+  };
+
+  const handleDownloadReport = () => {
+    const monthParam = encodeURIComponent(reportMonth || new Date().toISOString().slice(0, 7));
+    window.location.href = `/api/puskesmas/dashboard?action=export-csv&month=${monthParam}`;
   };
 
   if (loading && !stats) {
@@ -169,6 +252,34 @@ export default function MobilePuskesmasDashboard() {
 
         <section className={styles.sectionCard}>
           <div className={styles.sectionHead}>
+            <h2 className={styles.sectionTitle}>Anak Butuh Perhatian</h2>
+            <Link to="/m/puskesmas/anak" className={styles.linkBtn}>
+              Lihat Semua
+            </Link>
+          </div>
+          {anakButuhPerhatian.length === 0 ? (
+            <p className={styles.emptyText}>Belum ada anak prioritas dari data saat ini.</p>
+          ) : (
+            <div className={styles.list}>
+              {anakButuhPerhatian.map((anak) => (
+                <div key={anak.id} className={styles.listItem}>
+                  <div>
+                    <p className={styles.itemTitle}>{anak.nama}</p>
+                    <p className={styles.itemSub}>
+                      {anak.wilayah_name || "Wilayah tidak tersedia"} • {anak.daysSince > 900 ? "Belum pernah diperiksa" : `${anak.daysSince} hari lalu`}
+                    </p>
+                  </div>
+                  <span className={anak.status === "tinggi" ? styles.badgeDanger : styles.badgeWarning}>
+                    {anak.status === "tinggi" ? "Prioritas Tinggi" : "Perlu Tindak Lanjut"}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+
+        <section className={styles.sectionCard}>
+          <div className={styles.sectionHead}>
             <h2 className={styles.sectionTitle}>Wilayah Prioritas</h2>
             <button type="button" className={styles.linkBtn} onClick={loadData}>
               Refresh
@@ -194,22 +305,55 @@ export default function MobilePuskesmasDashboard() {
         </section>
 
         <section className={styles.sectionCard}>
-          <h2 className={styles.sectionTitle}>Kader Aktif</h2>
-          {kaders.length === 0 ? (
-            <p className={styles.emptyText}>Belum ada data kader.</p>
+          <h2 className={styles.sectionTitle}>Performa Kader per Wilayah</h2>
+          {performaKaderWilayah.length === 0 ? (
+            <p className={styles.emptyText}>Belum ada data wilayah/kader.</p>
           ) : (
             <div className={styles.list}>
-              {kaders.slice(0, 6).map((kader) => (
-                <div key={kader.id} className={styles.listItem}>
+              {performaKaderWilayah.map((item) => (
+                <div key={item.wilayah_id} className={styles.listItem}>
                   <div>
-                    <p className={styles.itemTitle}>{kader.name}</p>
-                    <p className={styles.itemSub}>{kader.wilayah?.nama_wilayah || "Wilayah tidak tersedia"}</p>
+                    <p className={styles.itemTitle}>{item.nama_wilayah}</p>
+                    <p className={styles.itemSub}>
+                      {item.kaderCount} kader • Rasio {item.rasioBalitaPerKader} balita/kader
+                    </p>
                   </div>
-                  <span className={styles.itemMeta}>{kader.email}</span>
+                  <span className={item.status === "aktif" ? styles.badgeSuccess : styles.badgeWarning}>
+                    {item.status === "aktif" ? "Aktif" : "Perlu Perhatian"}
+                  </span>
                 </div>
               ))}
             </div>
           )}
+        </section>
+
+        <section className={styles.sectionCard}>
+          <h2 className={styles.sectionTitle}>Laporan Bulanan Satu Klik</h2>
+          <div className={styles.reportControls}>
+            <label className={styles.reportLabel}>Periode laporan</label>
+            <input
+              type="month"
+              className={styles.reportInput}
+              value={reportMonth}
+              onChange={(e) => setReportMonth(e.target.value)}
+            />
+            <button
+              type="button"
+              className={styles.primaryBtn}
+              onClick={handleDownloadReport}
+            >
+              Unduh Rekap (CSV)
+            </button>
+          </div>
+          <div className={styles.reportSummary}>
+            <p className={styles.itemMetaStrong}>Periode: {laporanBulananPreview.monthLabel}</p>
+            <p className={styles.itemMeta}>Total balita: {laporanBulananPreview.totalBalita}</p>
+            <p className={styles.itemMeta}>Total kader: {laporanBulananPreview.totalKader}</p>
+            <p className={styles.itemMeta}>Prevalensi stunting: {laporanBulananPreview.prevalensiStunting}%</p>
+            <p className={styles.itemMeta}>Cakupan pemeriksaan: {laporanBulananPreview.cakupanPemeriksaan}%</p>
+            <p className={styles.itemMeta}>Wilayah prioritas utama: {laporanBulananPreview.wilayahPrioritas}</p>
+            <p className={styles.itemMeta}>Anak perlu atensi: {laporanBulananPreview.anakPerluAtensi}</p>
+          </div>
         </section>
 
         <Link to="/puskesmas/dashboard" className={styles.desktopLink}>

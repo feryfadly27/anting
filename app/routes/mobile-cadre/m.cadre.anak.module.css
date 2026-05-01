@@ -152,6 +152,12 @@
   color: #dc3545;
 }
 
+.badgeDanger {
+  composes: badge;
+  background: rgba(239, 68, 68, 0.16);
+  color: #b91c1c;
+}
+
 .badgeNone {
   composes: badge;
   background: #f1f5f9;
@@ -176,6 +182,94 @@
   color: #00b0f0;
   font-size: 0.95rem;
   font-weight: 700;
+}
+
+.reminderWrap {
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  border-radius: 0.55rem;
+  padding: 0.5rem;
+  margin-bottom: 0.65rem;
+}
+
+.reminderHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+}
+
+.reminderTitle {
+  font-size: 0.9rem;
+  color: #334155;
+  font-weight: 700;
+}
+
+.reminderMuted {
+  font-size: 0.84rem;
+  color: #64748b;
+}
+
+.reminderBadge {
+  padding: 0.12rem 0.45rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.reminderBadgeOverdue {
+  composes: reminderBadge;
+  background: rgba(239, 68, 68, 0.16);
+  color: #b91c1c;
+}
+
+.reminderBadgeToday {
+  composes: reminderBadge;
+  background: rgba(245, 158, 11, 0.16);
+  color: #b45309;
+}
+
+.reminderBadgeUpcoming {
+  composes: reminderBadge;
+  background: rgba(59, 130, 246, 0.14);
+  color: #1d4ed8;
+}
+
+.reminderRow {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 0.35rem;
+}
+
+.reminderInput {
+  min-height: 40px;
+  border-radius: 0.5rem;
+  border: 1px solid #cbd5e1;
+  padding: 0.45rem 0.55rem;
+  font-size: 0.95rem;
+}
+
+.reminderBtn {
+  min-height: 40px;
+  border: none;
+  border-radius: 0.5rem;
+  background: #00b0f0;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 0 0.6rem;
+}
+
+.reminderBtnGhost {
+  min-height: 40px;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.5rem;
+  background: #fff;
+  color: #334155;
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 0 0.6rem;
 }
 
 .actions {

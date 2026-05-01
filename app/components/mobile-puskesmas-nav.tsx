@@ -7,6 +7,7 @@ export function MobilePuskesmasNav() {
   const isAnak = path === "/m/puskesmas/anak";
   const isWilayah = path === "/m/puskesmas/wilayah";
   const isKader = path === "/m/puskesmas/kader";
+  const isInformasi = path === "/m/puskesmas/informasi";
 
   return (
     <nav className={styles.bottomNav}>
@@ -26,6 +27,10 @@ export function MobilePuskesmasNav() {
         <Link className={isKader ? styles.navItemActive : styles.navItem} to="/m/puskesmas/kader">
           <span className={styles.icon}>groups</span>
           <span>Kader</span>
+        </Link>
+        <Link className={isInformasi ? styles.navItemActive : styles.navItem} to="/m/puskesmas/informasi">
+          <span className={styles.icon}>campaign</span>
+          <span>Info</span>
         </Link>
       </div>
     </nav>

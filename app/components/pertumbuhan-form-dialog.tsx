@@ -21,6 +21,7 @@ interface FormData {
   tanggal_pengukuran: string;
   berat_badan: number;
   tinggi_badan: number;
+  lila_cm?: number;
 }
 
 export function PertumbuhanFormDialog({ open, onOpenChange, onSubmit, pertumbuhan, anakId }: PertumbuhanFormDialogProps) {
@@ -34,6 +35,7 @@ export function PertumbuhanFormDialog({ open, onOpenChange, onSubmit, pertumbuha
       tanggal_pengukuran: pertumbuhan?.tanggal_pengukuran || new Date().toISOString().split("T")[0],
       berat_badan: pertumbuhan?.berat_badan || 0,
       tinggi_badan: pertumbuhan?.tinggi_badan || 0,
+      lila_cm: (pertumbuhan as any)?.lila_cm || undefined,
     },
   });
 
@@ -43,6 +45,7 @@ export function PertumbuhanFormDialog({ open, onOpenChange, onSubmit, pertumbuha
         ...data,
         berat_badan: Number(data.berat_badan),
         tinggi_badan: Number(data.tinggi_badan),
+        lila_cm: data.lila_cm ? Number(data.lila_cm) : null,
         anak_id: anakId,
         ...(pertumbuhan && { id: pertumbuhan.id }),
       });
@@ -104,6 +107,22 @@ export function PertumbuhanFormDialog({ open, onOpenChange, onSubmit, pertumbuha
               placeholder="Contoh: 75.5"
             />
             {errors.tinggi_badan && <span className={styles.error}>{errors.tinggi_badan.message}</span>}
+          </div>
+
+          <div className={styles.field}>
+            <Label htmlFor="lila_cm">LiLA (cm)</Label>
+            <Input
+              id="lila_cm"
+              type="number"
+              step="0.01"
+              className={styles.input}
+              {...register("lila_cm", {
+                min: { value: 1, message: "LiLA minimal 1 cm" },
+                max: { value: 50, message: "LiLA maksimal 50 cm" },
+              })}
+              placeholder="Contoh: 13.2 (opsional)"
+            />
+            {errors.lila_cm && <span className={styles.error}>{errors.lila_cm.message}</span>}
           </div>
 
           <div className={styles.actions}>

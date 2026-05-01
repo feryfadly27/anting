@@ -6,6 +6,7 @@ export function MobileCadreNav() {
   const isHome = path === "/m/cadre/dashboard";
   const isAnak = path === "/m/cadre/anak";
   const isRekap = path === "/m/cadre/rekap";
+  const isInformasi = path === "/m/cadre/informasi";
 
   return (
     <nav className={styles.bottomNav}>
@@ -21,6 +22,10 @@ export function MobileCadreNav() {
         <Link className={isRekap ? styles.navItemActive : styles.navItem} to="/m/cadre/rekap">
           <span className={styles.icon}>analytics</span>
           <span>Rekap</span>
+        </Link>
+        <Link className={isInformasi ? styles.navItemActive : styles.navItem} to="/m/cadre/informasi">
+          <span className={styles.icon}>campaign</span>
+          <span>Info</span>
         </Link>
       </div>
     </nav>

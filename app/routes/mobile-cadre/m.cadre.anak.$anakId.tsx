@@ -78,12 +78,15 @@ export default function MobileCadreAnakDetailPage() {
   const { anakId = "" } = useParams();
   const [wilayahId, setWilayahId] = useState<string | null>(null);
   const [anak, setAnak] = useState<any>(null);
+  const [profilAnak, setProfilAnak] = useState<any>(null);
   const [pertumbuhan, setPertumbuhan] = useState<any[]>([]);
   const [imunisasi, setImunisasi] = useState<any[]>([]);
+  const [intervensi, setIntervensi] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [showPertumbuhan, setShowPertumbuhan] = useState(false);
   const [showImunisasi, setShowImunisasi] = useState(false);
+  const [showIntervensi, setShowIntervensi] = useState(false);
 
   useEffect(() => {
     let m = true;
@@ -106,8 +109,10 @@ export default function MobileCadreAnakDetailPage() {
       setLoadError(null);
       const data = await cadreApi.getAnakDetail(wid, anakId);
       setAnak(data.anak);
+      setProfilAnak(data.profilAnak ?? null);
       setPertumbuhan(Array.isArray(data.pertumbuhan) ? data.pertumbuhan : []);
       setImunisasi(Array.isArray(data.imunisasi) ? data.imunisasi : []);
+      setIntervensi(Array.isArray(data.intervensi) ? data.intervensi : []);
     } catch (e) {
       console.error(e);
       setLoadError("Gagal memuat profil anak.");
@@ -141,6 +146,32 @@ export default function MobileCadreAnakDetailPage() {
     setShowImunisasi(false);
     if (wilayahId) await loadDetail(wilayahId);
     toast({ title: "Tersimpan", description: "Data imunisasi berhasil ditambahkan." });
+  };
+
+  const handleIntervensiSubmit = async (data: {
+    tanggal: string;
+    jenis: "PKMK" | "VITAMIN" | "ZINC";
+    produk: string;
+    dosis: string;
+    catatan: string;
+  }) => {
+    const fd = new FormData();
+    fd.append("intent", "create-intervensi");
+    fd.append(
+      "data",
+      JSON.stringify({
+        anak_id: anakId,
+        tanggal: data.tanggal,
+        jenis: data.jenis,
+        produk: data.produk,
+        dosis: data.dosis,
+        catatan: data.catatan,
+      })
+    );
+    await cadreApi.submitAction(fd);
+    setShowIntervensi(false);
+    if (wilayahId) await loadDetail(wilayahId);
+    toast({ title: "Tersimpan", description: "Data intervensi gizi berhasil ditambahkan." });
   };
 
   return (
@@ -191,6 +222,7 @@ export default function MobileCadreAnakDetailPage() {
               <div className={styles.stats}>
                 <span>Catatan BB/TB: {pertumbuhan.length}</span>
                 <span>Catatan imunisasi: {imunisasi.length}</span>
+                <span>Intervensi gizi: {intervensi.length}</span>
                 {latestPertumbuhan ? (
                   <span>
                     Terakhir: {latestPertumbuhan.berat_badan} kg / {latestPertumbuhan.tinggi_badan} cm
@@ -216,6 +248,52 @@ export default function MobileCadreAnakDetailPage() {
             </section>
 
             <section className={styles.card}>
+              <h2 className={styles.sectionTitle}>Data Profil Anak</h2>
+              {profilAnak ? (
+                <div className={styles.profileGrid}>
+                  <div className={styles.profileItem}>
+                    <span className={styles.profileLabel}>NIK Anak</span>
+                    <span className={styles.profileValue}>{profilAnak.nik_anak || "-"}</span>
+                  </div>
+                  <div className={styles.profileItem}>
+                    <span className={styles.profileLabel}>Tempat Lahir</span>
+                    <span className={styles.profileValue}>{profilAnak.tempat_lahir || "-"}</span>
+                  </div>
+                  <div className={styles.profileItem}>
+                    <span className={styles.profileLabel}>Panjang Lahir</span>
+                    <span className={styles.profileValue}>
+                      {profilAnak.panjang_lahir_cm !== null && profilAnak.panjang_lahir_cm !== undefined
+                        ? `${profilAnak.panjang_lahir_cm} cm`
+                        : "-"}
+                    </span>
+                  </div>
+                  <div className={styles.profileItem}>
+                    <span className={styles.profileLabel}>Berat Lahir</span>
+                    <span className={styles.profileValue}>
+                      {profilAnak.berat_lahir_kg !== null && profilAnak.berat_lahir_kg !== undefined
+                        ? `${profilAnak.berat_lahir_kg} kg`
+                        : "-"}
+                    </span>
+                  </div>
+                  <div className={styles.profileItem}>
+                    <span className={styles.profileLabel}>Golongan Darah</span>
+                    <span className={styles.profileValue}>{profilAnak.golongan_darah || "-"}</span>
+                  </div>
+                  <div className={styles.profileItemWide}>
+                    <span className={styles.profileLabel}>Alergi</span>
+                    <span className={styles.profileValue}>{profilAnak.alergi || "-"}</span>
+                  </div>
+                  <div className={styles.profileItemWide}>
+                    <span className={styles.profileLabel}>Catatan Kesehatan</span>
+                    <span className={styles.profileValue}>{profilAnak.catatan_kesehatan || "-"}</span>
+                  </div>
+                </div>
+              ) : (
+                <p className={styles.empty}>Profil anak belum diisi oleh orang tua.</p>
+              )}
+            </section>
+
+            <section className={styles.card}>
               <h2 className={styles.sectionTitle}>Tambah Catatan</h2>
               <div className={styles.actionRow}>
                 <button type="button" className={styles.actionBtn} onClick={() => setShowPertumbuhan(true)}>
@@ -229,6 +307,12 @@ export default function MobileCadreAnakDetailPage() {
                     vaccines
                   </span>
                   Imunisasi
+                </button>
+                <button type="button" className={`${styles.actionBtn} ${styles.actionBtnWide}`} onClick={() => setShowIntervensi(true)}>
+                  <span className={styles.icon} aria-hidden>
+                    medication
+                  </span>
+                  PKMK / Vitamin / Zinc
                 </button>
               </div>
             </section>
@@ -290,6 +374,27 @@ export default function MobileCadreAnakDetailPage() {
                 </div>
               )}
             </section>
+
+            <section className={styles.card}>
+              <h2 className={styles.sectionTitle}>Riwayat Intervensi Gizi</h2>
+              {intervensi.length === 0 ? (
+                <p className={styles.empty}>Belum ada riwayat intervensi gizi.</p>
+              ) : (
+                <div className={styles.list}>
+                  {intervensi.map((i) => (
+                    <div key={i.id} className={styles.item}>
+                      <div className={styles.itemTop}>
+                        <p className={styles.itemStrong}>{i.jenis}</p>
+                        <p className={styles.itemDate}>{formatTanggal(i.tanggal)}</p>
+                      </div>
+                      <p className={styles.muted}>
+                        Produk: {i.produk || "-"} · Dosis: {i.dosis || "-"} · Catatan: {i.catatan || "-"}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
           </>
         ) : null}
       </main>
@@ -308,10 +413,121 @@ export default function MobileCadreAnakDetailPage() {
             anakId={anakId}
             onSubmit={handleImunisasiSubmit}
           />
+          <IntervensiFormDialog
+            open={showIntervensi}
+            onOpenChange={setShowIntervensi}
+            onSubmit={handleIntervensiSubmit}
+          />
         </>
       )}
 
       <MobileCadreNav />
+    </div>
+  );
+}
+
+function IntervensiFormDialog({
+  open,
+  onOpenChange,
+  onSubmit,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onSubmit: (data: { tanggal: string; jenis: "PKMK" | "VITAMIN" | "ZINC"; produk: string; dosis: string; catatan: string }) => Promise<void>;
+}) {
+  const [tanggal, setTanggal] = useState(new Date().toISOString().split("T")[0]);
+  const [jenis, setJenis] = useState<"PKMK" | "VITAMIN" | "ZINC">("PKMK");
+  const [produk, setProduk] = useState("");
+  const [dosis, setDosis] = useState("");
+  const [catatan, setCatatan] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  if (!open) return null;
+
+  return (
+    <div className={styles.modalBackdrop} onClick={() => onOpenChange(false)}>
+      <section className={styles.modalCard} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.modalHeader}>
+          <h3 className={styles.sectionTitle}>Tambah Intervensi Gizi</h3>
+          <button type="button" className={styles.modalClose} onClick={() => onOpenChange(false)}>
+            ✕
+          </button>
+        </div>
+        <div className={styles.modalForm}>
+          <label className={styles.formLabel}>Tanggal</label>
+          <input className={styles.formInput} type="date" value={tanggal} onChange={(e) => setTanggal(e.target.value)} />
+
+          <label className={styles.formLabel}>Jenis Intervensi</label>
+          <div className={styles.jenisRow}>
+            <button
+              type="button"
+              className={jenis === "PKMK" ? styles.jenisBtnActive : styles.jenisBtn}
+              onClick={() => setJenis("PKMK")}
+            >
+              PKMK
+            </button>
+            <button
+              type="button"
+              className={jenis === "VITAMIN" ? styles.jenisBtnActive : styles.jenisBtn}
+              onClick={() => setJenis("VITAMIN")}
+            >
+              Vitamin
+            </button>
+            <button
+              type="button"
+              className={jenis === "ZINC" ? styles.jenisBtnActive : styles.jenisBtn}
+              onClick={() => setJenis("ZINC")}
+            >
+              Zinc
+            </button>
+          </div>
+
+          <label className={styles.formLabel}>Produk</label>
+          <input className={styles.formInput} value={produk} onChange={(e) => setProduk(e.target.value)} placeholder="Opsional" />
+
+          <label className={styles.formLabel}>Dosis</label>
+          <input className={styles.formInput} value={dosis} onChange={(e) => setDosis(e.target.value)} placeholder="Opsional" />
+
+          <label className={styles.formLabel}>Catatan</label>
+          <input
+            className={styles.formInput}
+            value={catatan}
+            onChange={(e) => setCatatan(e.target.value)}
+            placeholder="Opsional"
+          />
+
+          <div className={styles.modalActions}>
+            <button type="button" className={styles.secondaryBtn} onClick={() => onOpenChange(false)}>
+              Batal
+            </button>
+            <button
+              type="button"
+              className={styles.primaryBtn}
+              disabled={saving}
+              onClick={async () => {
+                if (!tanggal || !jenis) {
+                  toast({ title: "Data belum lengkap", description: "Tanggal dan jenis intervensi wajib diisi.", variant: "destructive" });
+                  return;
+                }
+                try {
+                  setSaving(true);
+                  await onSubmit({ tanggal, jenis, produk: produk.trim(), dosis: dosis.trim(), catatan: catatan.trim() });
+                  setProduk("");
+                  setDosis("");
+                  setCatatan("");
+                } catch (error) {
+                  console.error(error);
+                  toast({ title: "Gagal menyimpan", description: "Intervensi gizi belum bisa disimpan.", variant: "destructive" });
+                } finally {
+                  setSaving(false);
+                }
+              }}
+            >
+              {saving ? "Menyimpan..." : "Simpan"}
+            </button>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

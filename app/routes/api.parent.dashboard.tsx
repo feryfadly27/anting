@@ -2,6 +2,9 @@ import { dashboardService } from "~/db/services/dashboard.service";
 import { anakService } from "~/db/services/anak.service";
 import { pertumbuhanService } from "~/db/services/pertumbuhan.service";
 import { imunisasiService } from "~/db/services/imunisasi.service";
+import { profilIbuService } from "~/db/services/profil-ibu.service";
+import { intervensiGiziService } from "~/db/services/intervensi-gizi.service";
+import { informasiService } from "~/db/services/informasi.service";
 import { getAuthUser } from "~/utils/auth.server";
 
 export async function loader({ request }: { request: Request }) {
@@ -42,6 +45,19 @@ export async function loader({ request }: { request: Request }) {
             const data = await imunisasiService.getImunisasiByAnakId(anakId);
             return Response.json(data);
         }
+        if (action === "intervensi") {
+            const anakId = url.searchParams.get("anakId") || "";
+            const data = await intervensiGiziService.getByAnakId(anakId);
+            return Response.json(data);
+        }
+        if (action === "informasi") {
+            const data = await informasiService.listForRole({
+                wilayahId: user.wilayah_id,
+                includeUnpublished: false,
+                limit: 200,
+            });
+            return Response.json(data);
+        }
 
         // Default: return all dashboard data
         const [stats, summaries, anakList] = await Promise.all([
@@ -67,6 +83,10 @@ export async function action({ request }: { request: Request }) {
 
     try {
         if (intent === "create-anak") {
+            const hasProfilIbu = await profilIbuService.hasProfile(user.id);
+            if (!hasProfilIbu) {
+                return Response.json({ error: "Lengkapi Profil Ibu sebelum menambah data anak." }, { status: 400 });
+            }
             const data = {
                 nama: formData.get("nama") as string,
                 tanggal_lahir: new Date(formData.get("tanggal_lahir") as string),
@@ -100,6 +120,9 @@ export async function action({ request }: { request: Request }) {
                 tanggal_pengukuran: new Date(rawData.tanggal_pengukuran),
                 berat_badan: Number(rawData.berat_badan),
                 tinggi_badan: Number(rawData.tinggi_badan),
+                lila_cm: rawData.lila_cm !== undefined && rawData.lila_cm !== null && rawData.lila_cm !== ""
+                    ? Number(rawData.lila_cm)
+                    : null,
             };
             console.log("Creating pertumbuhan with data:", JSON.stringify(data));
             const result = await pertumbuhanService.createPertumbuhan(data);
@@ -113,6 +136,9 @@ export async function action({ request }: { request: Request }) {
             if (rawData.tanggal_pengukuran) data.tanggal_pengukuran = new Date(rawData.tanggal_pengukuran);
             if (rawData.berat_badan !== undefined) data.berat_badan = Number(rawData.berat_badan);
             if (rawData.tinggi_badan !== undefined) data.tinggi_badan = Number(rawData.tinggi_badan);
+            if (rawData.lila_cm !== undefined) {
+                data.lila_cm = rawData.lila_cm === null || rawData.lila_cm === "" ? null : Number(rawData.lila_cm);
+            }
             console.log("Updating pertumbuhan", id, "with data:", JSON.stringify(data));
             const result = await pertumbuhanService.updatePertumbuhan(id, data);
             return Response.json(result);
@@ -133,6 +159,19 @@ export async function action({ request }: { request: Request }) {
             };
             console.log("Creating imunisasi with data:", data);
             const result = await imunisasiService.createImunisasi(data);
+            return Response.json(result);
+        }
+        if (intent === "create-intervensi") {
+            const rawData = JSON.parse(formData.get("data") as string);
+            const data = {
+                anak_id: rawData.anak_id,
+                tanggal: new Date(rawData.tanggal),
+                jenis: rawData.jenis as "PKMK" | "VITAMIN" | "ZINC",
+                produk: rawData.produk || "",
+                dosis: rawData.dosis || "",
+                catatan: rawData.catatan || "",
+            };
+            const result = await intervensiGiziService.createIntervensi(data);
             return Response.json(result);
         }
         if (intent === "update-imunisasi") {

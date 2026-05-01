@@ -167,12 +167,12 @@
 
 .actionRow {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.55rem;
 }
 
 .actionBtn {
-  min-height: 44px;
+  min-height: 46px;
   border: none;
   border-radius: 0.5rem;
   display: inline-flex;
@@ -181,14 +181,54 @@
   gap: 0.35rem;
   font-weight: 700;
   font-size: 1rem;
+  line-height: 1.2;
+  text-align: center;
+  white-space: normal;
+  padding: 0.35rem 0.55rem;
   background: #00b0f0;
   color: #fff;
+}
+
+.actionBtnWide {
+  grid-column: 1 / -1;
 }
 
 .sectionTitle {
   margin: 0 0 0.6rem;
   font-size: 1.08rem;
   font-weight: 700;
+}
+
+.profileGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.profileItem {
+  border: 1px solid #eef2f7;
+  border-radius: 0.5rem;
+  padding: 0.55rem 0.6rem;
+  display: grid;
+  gap: 0.2rem;
+}
+
+.profileItemWide {
+  composes: profileItem;
+  grid-column: 1 / -1;
+}
+
+.profileLabel {
+  font-size: 0.82rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.profileValue {
+  font-size: 0.94rem;
+  color: #0f172a;
+  font-weight: 600;
+  word-break: break-word;
 }
 
 .list {
@@ -265,6 +305,120 @@
   border-radius: 0.5rem;
   background: #00b0f0;
   color: #fff;
+  font-weight: 700;
+}
+
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 80;
+  padding: 0.85rem;
+}
+
+.modalCard {
+  width: 100%;
+  max-width: 32rem;
+  background: #fff;
+  border-radius: 0.9rem;
+  border: 1px solid #e2e8f0;
+  padding: 1rem;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.7rem;
+}
+
+.modalClose {
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-size: 1.4rem;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.modalForm {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.formLabel {
+  font-size: 1.08rem;
+  color: #475569;
+  font-weight: 600;
+}
+
+.formInput {
+  width: 100%;
+  min-height: 50px;
+  border-radius: 0.5rem;
+  border: 1px solid #cbd5e1;
+  padding: 0.7rem 0.8rem;
+  font-size: 1.08rem;
+}
+
+.formInput::placeholder {
+  font-size: 1.03rem;
+}
+
+.jenisRow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.jenisBtn {
+  min-height: 46px;
+  border-radius: 0.5rem;
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  color: #334155;
+  font-size: 1.02rem;
+  font-weight: 700;
+  padding: 0.5rem 0.35rem;
+  text-align: center;
+}
+
+.jenisBtnActive {
+  composes: jenisBtn;
+  border-color: #00b0f0;
+  background: rgba(0, 176, 240, 0.12);
+  color: #0369a1;
+}
+
+.modalActions {
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.secondaryBtn {
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  color: #334155;
+  border-radius: 0.5rem;
+  min-height: 44px;
+  padding: 0 0.9rem;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.primaryBtn {
+  border: none;
+  background: #00b0f0;
+  color: #fff;
+  border-radius: 0.5rem;
+  min-height: 44px;
+  padding: 0 0.9rem;
+  font-size: 1rem;
   font-weight: 700;
 }
 

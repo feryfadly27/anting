@@ -27,11 +27,18 @@ enum JenisKelamin {
   perempuan
 }
 
+enum JenisIntervensiGizi {
+  PKMK
+  VITAMIN
+  ZINC
+}
+
 model Wilayah {
   id           String      @id @default(uuid())
   nama_wilayah String      @db.VarChar(255)
   tipe         TipeWilayah
   users        User[]
+  informasi    Informasi[]
 
   @@map("wilayah")
 }
@@ -47,8 +54,51 @@ model User {
   
   wilayah    Wilayah? @relation(fields: [wilayah_id], references: [id])
   anak       Anak[]
+  profil_ibu ProfilIbu?
+  kunjungan_reminder_created KunjunganReminder[]
+  informasi_created Informasi[]
 
   @@map("users")
+}
+
+model Informasi {
+  id                 String   @id @default(uuid())
+  judul              String   @db.VarChar(180)
+  kategori           String   @db.VarChar(30)
+  konten             String   @db.Text
+  gambar_data_url    String?  @db.Text
+  tanggal_kegiatan   DateTime? @db.Date
+  lokasi             String?  @db.VarChar(180)
+  wilayah_id         String?
+  created_by_user_id String
+  created_by_role    Role
+  is_published       Boolean  @default(true)
+  is_pinned          Boolean  @default(false)
+  created_at         DateTime @default(now()) @db.Timestamp(0)
+  updated_at         DateTime @updatedAt @db.Timestamp(0)
+
+  wilayah            Wilayah? @relation(fields: [wilayah_id], references: [id], onDelete: SetNull)
+  created_by_user    User     @relation(fields: [created_by_user_id], references: [id], onDelete: Cascade)
+
+  @@map("informasi")
+}
+
+model ProfilIbu {
+  id               String   @id @default(uuid())
+  user_id          String   @unique
+  nik              String   @unique @db.VarChar(16)
+  alamat           String   @db.Text
+  tanggal_lahir    DateTime @db.Date
+  tinggi_badan_cm  Float
+  berat_badan_kg   Float
+  golongan_darah   String?  @db.VarChar(5)
+  riwayat_penyakit String?  @db.Text
+  created_at       DateTime @default(now()) @db.Timestamp(0)
+  updated_at       DateTime @updatedAt @db.Timestamp(0)
+
+  user             User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("profil_ibu")
 }
 
 model Anak {
@@ -62,8 +112,58 @@ model Anak {
   user          User         @relation(fields: [user_id], references: [id])
   pertumbuhan   Pertumbuhan[]
   imunisasi     Imunisasi[]
+  intervensi_gizi IntervensiGizi[]
+  profil_anak   ProfilAnak?
+  kunjungan_reminder KunjunganReminder?
 
   @@map("anak")
+}
+
+model KunjunganReminder {
+  id                 String   @id @default(uuid())
+  anak_id            String   @unique
+  tanggal_kunjungan  DateTime @db.Date
+  created_by_kader_id String
+  created_at         DateTime @default(now()) @db.Timestamp(0)
+  updated_at         DateTime @updatedAt @db.Timestamp(0)
+
+  anak               Anak     @relation(fields: [anak_id], references: [id], onDelete: Cascade)
+  created_by_kader   User     @relation(fields: [created_by_kader_id], references: [id], onDelete: Cascade)
+
+  @@map("kunjungan_reminder")
+}
+
+model IntervensiGizi {
+  id            String              @id @default(uuid())
+  anak_id       String
+  tanggal       DateTime            @db.Date
+  jenis         JenisIntervensiGizi
+  produk        String?             @db.VarChar(100)
+  dosis         String?             @db.VarChar(50)
+  catatan       String?             @db.Text
+  created_at    DateTime            @default(now()) @db.Timestamp(0)
+
+  anak          Anak                @relation(fields: [anak_id], references: [id], onDelete: Cascade)
+
+  @@map("intervensi_gizi")
+}
+
+model ProfilAnak {
+  id                  String   @id @default(uuid())
+  anak_id             String   @unique
+  nik_anak            String?  @unique @db.VarChar(16)
+  tempat_lahir        String?  @db.VarChar(100)
+  panjang_lahir_cm    Float?
+  berat_lahir_kg      Float?
+  golongan_darah      String?  @db.VarChar(5)
+  alergi              String?  @db.Text
+  catatan_kesehatan   String?  @db.Text
+  created_at          DateTime @default(now()) @db.Timestamp(0)
+  updated_at          DateTime @updatedAt @db.Timestamp(0)
+
+  anak                Anak     @relation(fields: [anak_id], references: [id], onDelete: Cascade)
+
+  @@map("profil_anak")
 }
 
 model Imunisasi {
@@ -85,6 +185,7 @@ model Pertumbuhan {
   tanggal_pengukuran DateTime @db.Date
   berat_badan        Float
   tinggi_badan       Float
+  lila_cm            Float?
   lingkar_kepala     Float?
   umur_bulan         Int?
   zscore_tbu         Float?

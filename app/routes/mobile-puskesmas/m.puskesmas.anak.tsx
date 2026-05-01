@@ -16,9 +16,14 @@ type AnakItem = {
   latest_pengukuran: string | null;
   latest_berat_badan: number | null;
   latest_tinggi_badan: number | null;
+  latest_zscore_tbu: number | null;
+  latest_zscore_bbu: number | null;
+  latest_zscore_bbtb: number | null;
   total_pertumbuhan: number;
   total_imunisasi: number;
 };
+
+type PriorityFilter = "semua" | "tinggi" | "perlu";
 
 const puskesmasApi = {
   fetchWithError: async (url: string) => {
@@ -55,14 +60,36 @@ export default function MobilePuskesmasAnakPage() {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [anakList, setAnakList] = useState<AnakItem[]>([]);
   const [keyword, setKeyword] = useState("");
+  const [priorityFilter, setPriorityFilter] = useState<PriorityFilter>("semua");
+
+  const anakWithPriority = useMemo(() => {
+    const now = Date.now();
+    return anakList.map((a) => {
+      const daysSince = a.latest_pengukuran
+        ? Math.floor((now - new Date(a.latest_pengukuran).getTime()) / (1000 * 60 * 60 * 24))
+        : 999;
+      const score =
+        ((a.latest_zscore_tbu ?? 0) < -2 ? 3 : 0) +
+        ((a.latest_zscore_bbu ?? 0) < -2 ? 2 : 0) +
+        ((a.latest_zscore_bbtb ?? 0) < -2 ? 2 : 0) +
+        (a.total_pertumbuhan === 0 ? 3 : 0) +
+        (daysSince > 90 ? 3 : daysSince > 60 ? 2 : daysSince > 30 ? 1 : 0) +
+        (a.total_imunisasi === 0 ? 1 : 0);
+      const priority: PriorityFilter = score >= 5 ? "tinggi" : score >= 3 ? "perlu" : "semua";
+      return { ...a, daysSince, score, priority };
+    });
+  }, [anakList]);
 
   const filteredAnak = useMemo(() => {
     const q = keyword.trim().toLowerCase();
-    if (!q) return anakList;
-    return anakList.filter((a) =>
+    const byKeyword = !q
+      ? anakWithPriority
+      : anakWithPriority.filter((a) =>
       [a.nama, a.parent_name || "", a.wilayah_name || ""].some((val) => val.toLowerCase().includes(q))
     );
-  }, [anakList, keyword]);
+    if (priorityFilter === "semua") return byKeyword;
+    return byKeyword.filter((a) => a.priority === priorityFilter);
+  }, [anakWithPriority, keyword, priorityFilter]);
 
   const loadData = async () => {
     try {
@@ -110,6 +137,29 @@ export default function MobilePuskesmasAnakPage() {
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
         />
+        <div className={styles.filterRow}>
+          <button
+            type="button"
+            className={priorityFilter === "semua" ? styles.filterBtnActive : styles.filterBtn}
+            onClick={() => setPriorityFilter("semua")}
+          >
+            Semua
+          </button>
+          <button
+            type="button"
+            className={priorityFilter === "tinggi" ? styles.filterDanger : styles.filterBtn}
+            onClick={() => setPriorityFilter("tinggi")}
+          >
+            Prioritas Tinggi
+          </button>
+          <button
+            type="button"
+            className={priorityFilter === "perlu" ? styles.filterWarning : styles.filterBtn}
+            onClick={() => setPriorityFilter("perlu")}
+          >
+            Perlu Tindak Lanjut
+          </button>
+        </div>
 
         {loading ? (
           <div className={styles.loadingWrap}>
@@ -129,7 +179,16 @@ export default function MobilePuskesmasAnakPage() {
               <article key={anak.id} className={styles.item}>
                 <div className={styles.itemTop}>
                   <h2 className={styles.itemTitle}>{anak.nama}</h2>
-                  <span className={styles.badge}>{calculateAge(anak.tanggal_lahir)}</span>
+                  <div className={styles.itemBadges}>
+                    <span className={styles.badge}>{calculateAge(anak.tanggal_lahir)}</span>
+                    {anak.priority === "tinggi" ? (
+                      <span className={styles.badgeDanger}>Prioritas Tinggi</span>
+                    ) : anak.priority === "perlu" ? (
+                      <span className={styles.badgeWarning}>Perlu Tindak Lanjut</span>
+                    ) : (
+                      <span className={styles.badgeSuccess}>Stabil</span>
+                    )}
+                  </div>
                 </div>
                 <p className={styles.itemSub}>
                   {anak.jenis_kelamin === "laki_laki" ? "Laki-laki" : "Perempuan"} • {anak.parent_name || "Orang tua tidak tersedia"}
@@ -137,6 +196,10 @@ export default function MobilePuskesmasAnakPage() {
                 <p className={styles.itemMeta}>Wilayah: {anak.wilayah_name || "-"}</p>
                 <p className={styles.itemMeta}>
                   Pemeriksaan: {anak.total_pertumbuhan} • Imunisasi: {anak.total_imunisasi}
+                </p>
+                <p className={styles.itemMeta}>
+                  Status z-score: TB/U {anak.latest_zscore_tbu ?? "-"} • BB/U {anak.latest_zscore_bbu ?? "-"} • BB/TB{" "}
+                  {anak.latest_zscore_bbtb ?? "-"}
                 </p>
                 <p className={styles.itemMeta}>
                   Terakhir:{" "}

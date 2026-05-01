@@ -67,7 +67,8 @@ export const dashboardService = {
       include: {
         pertumbuhan: {
           orderBy: { tanggal_pengukuran: 'desc' }
-        }
+        },
+        kunjungan_reminder: true,
       },
       orderBy: { created_at: 'desc' }
     });
@@ -98,6 +99,7 @@ export const dashboardService = {
         anak,
         latestPertumbuhan,
         pertumbuhanCount: anak.pertumbuhan.length,
+        reminder_kunjungan: anak.kunjungan_reminder?.tanggal_kunjungan ?? null,
         needsAttention,
         alerts,
       };

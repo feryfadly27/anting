@@ -1,4 +1,8 @@
 import { prisma } from "../prisma";
+import { pertumbuhanService } from "./pertumbuhan.service";
+import { imunisasiService } from "./imunisasi.service";
+import { profilAnakService } from "./profil-anak.service";
+import { intervensiGiziService } from "./intervensi-gizi.service";
 
 // ============================================================================
 // Statistics & Overview
@@ -122,9 +126,50 @@ export async function getAllWilayah(): Promise<Wilayah[]> {
   }
 }
 
+export async function createWilayah(namaWilayah: string, tipe: "desa" | "kelurahan" | "puskesmas" = "desa"): Promise<Wilayah> {
+  const cleanName = namaWilayah.trim();
+  if (!cleanName) {
+    throw new Error("Nama wilayah wajib diisi.");
+  }
+  const result = await prisma.wilayah.create({
+    data: {
+      nama_wilayah: cleanName,
+      tipe,
+    },
+  });
+  return result as Wilayah;
+}
+
+export async function updateWilayah(
+  wilayahId: string,
+  updates: { nama_wilayah?: string; tipe?: "desa" | "kelurahan" | "puskesmas" }
+): Promise<Wilayah> {
+  const payload: { nama_wilayah?: string; tipe?: "desa" | "kelurahan" | "puskesmas" } = {};
+
+  if (typeof updates.nama_wilayah === "string") {
+    const cleanName = updates.nama_wilayah.trim();
+    if (!cleanName) {
+      throw new Error("Nama wilayah wajib diisi.");
+    }
+    payload.nama_wilayah = cleanName;
+  }
+
+  if (updates.tipe) {
+    payload.tipe = updates.tipe;
+  }
+
+  const result = await prisma.wilayah.update({
+    where: { id: wilayahId },
+    data: payload,
+  });
+
+  return result as Wilayah;
+}
+
 export interface WilayahStats {
   wilayah_id: string;
   nama_wilayah: string;
+  tipe: "desa" | "kelurahan" | "puskesmas";
   totalBalita: number;
   stuntingCount: number;
   prevalensi: number;
@@ -140,6 +185,9 @@ export interface AnakPuskesmasItem {
   latest_pengukuran: string | null;
   latest_berat_badan: number | null;
   latest_tinggi_badan: number | null;
+  latest_zscore_tbu: number | null;
+  latest_zscore_bbu: number | null;
+  latest_zscore_bbtb: number | null;
   total_pertumbuhan: number;
   total_imunisasi: number;
 }
@@ -166,6 +214,9 @@ export async function getAllAnakForPuskesmas(): Promise<AnakPuskesmasItem[]> {
             tanggal_pengukuran: true,
             berat_badan: true,
             tinggi_badan: true,
+            zscore_tbu: true,
+            zscore_bbu: true,
+            zscore_bbtb: true,
           },
         },
         _count: {
@@ -187,6 +238,9 @@ export async function getAllAnakForPuskesmas(): Promise<AnakPuskesmasItem[]> {
       latest_pengukuran: anak.pertumbuhan[0]?.tanggal_pengukuran?.toISOString() ?? null,
       latest_berat_badan: anak.pertumbuhan[0]?.berat_badan ?? null,
       latest_tinggi_badan: anak.pertumbuhan[0]?.tinggi_badan ?? null,
+      latest_zscore_tbu: anak.pertumbuhan[0]?.zscore_tbu ?? null,
+      latest_zscore_bbu: anak.pertumbuhan[0]?.zscore_bbu ?? null,
+      latest_zscore_bbtb: anak.pertumbuhan[0]?.zscore_bbtb ?? null,
       total_pertumbuhan: anak._count.pertumbuhan,
       total_imunisasi: anak._count.imunisasi,
     }));
@@ -194,6 +248,51 @@ export async function getAllAnakForPuskesmas(): Promise<AnakPuskesmasItem[]> {
     console.error("Error getting all anak for puskesmas:", error);
     return [];
   }
+}
+
+export async function getAnakDetailForPuskesmas(anakId: string) {
+  const cleanAnakId = anakId.trim();
+  if (!cleanAnakId) return null;
+
+  const anak = await prisma.anak.findUnique({
+    where: { id: cleanAnakId },
+    include: {
+      user: {
+        select: {
+          name: true,
+          wilayah: {
+            select: {
+              nama_wilayah: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (!anak) return null;
+
+  const [pertumbuhan, imunisasi, profilAnak, intervensi] = await Promise.all([
+    pertumbuhanService.getPertumbuhanByAnakId(cleanAnakId),
+    imunisasiService.getImunisasiByAnakId(cleanAnakId),
+    profilAnakService.getByAnakId(cleanAnakId),
+    intervensiGiziService.getByAnakId(cleanAnakId),
+  ]);
+
+  return {
+    anak: {
+      id: anak.id,
+      nama: anak.nama,
+      tanggal_lahir: anak.tanggal_lahir.toISOString(),
+      jenis_kelamin: anak.jenis_kelamin,
+      parent_name: anak.user?.name ?? null,
+      wilayah_name: anak.user?.wilayah?.nama_wilayah ?? null,
+    },
+    pertumbuhan,
+    imunisasi,
+    profilAnak,
+    intervensi,
+  };
 }
 
 export async function getStatsByWilayah(wilayahId?: string): Promise<WilayahStats[]> {
@@ -240,6 +339,7 @@ export async function getStatsByWilayah(wilayahId?: string): Promise<WilayahStat
       return {
         wilayah_id: w.id,
         nama_wilayah: w.nama_wilayah,
+        tipe: w.tipe as "desa" | "kelurahan" | "puskesmas",
         totalBalita,
         stuntingCount,
         prevalensi,
@@ -421,12 +521,36 @@ export async function createKader(name: string, email: string, password: string,
 
 export async function updateKader(
   kaderId: string,
-  updates: { name?: string; email?: string; wilayah_id?: string }
+  updates: { name?: string; email?: string; wilayah_id?: string; password?: string }
 ): Promise<void> {
   try {
+    const payload: { name?: string; email?: string; wilayah_id?: string; password?: string } = {};
+
+    if (typeof updates.name === "string") {
+      const cleanName = updates.name.trim();
+      if (!cleanName) throw new Error("Nama kader wajib diisi.");
+      payload.name = cleanName;
+    }
+
+    if (typeof updates.email === "string") {
+      const cleanEmail = updates.email.trim();
+      if (!cleanEmail) throw new Error("Email kader wajib diisi.");
+      payload.email = cleanEmail;
+    }
+
+    if (typeof updates.wilayah_id === "string") {
+      if (!updates.wilayah_id.trim()) throw new Error("Wilayah kader wajib diisi.");
+      payload.wilayah_id = updates.wilayah_id.trim();
+    }
+
+    if (typeof updates.password === "string" && updates.password.trim()) {
+      const bcrypt = await import("bcryptjs");
+      payload.password = await bcrypt.hash(updates.password.trim(), 10);
+    }
+
     await prisma.user.update({
       where: { id: kaderId },
-      data: updates
+      data: payload
     });
   } catch (error) {
     console.error("Error updating kader:", error);

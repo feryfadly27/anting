@@ -184,9 +184,9 @@ export default function PuskesmasDashboard() {
 
         {/* Main Content Tabs */}
         <Tabs defaultValue="analytics" className={styles.tabs}>
-          <TabsList>
-            <TabsTrigger value="analytics">Analitik & Prevalensi</TabsTrigger>
-            <TabsTrigger value="kaders">Manajemen Kader</TabsTrigger>
+          <TabsList className={styles.tabsList}>
+            <TabsTrigger className={styles.tabTrigger} value="analytics">Analitik & Prevalensi</TabsTrigger>
+            <TabsTrigger className={styles.tabTrigger} value="kaders">Manajemen Kader</TabsTrigger>
           </TabsList>
 
           <TabsContent value="analytics" className={styles.tabContent}>

@@ -19,7 +19,8 @@ export const cadreService = {
             },
             imunisasi: {
               orderBy: { tanggal: 'desc' }
-            }
+            },
+            kunjungan_reminder: true,
           }
         }
       }
@@ -35,6 +36,7 @@ export const cadreService = {
           latest_pertumbuhan: a.pertumbuhan[0] || null,
           imunisasi_list: a.imunisasi || [],
           imunisasi_count: a.imunisasi.length,
+          reminder_kunjungan: a.kunjungan_reminder?.tanggal_kunjungan ?? null,
         });
       });
     });

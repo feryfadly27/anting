@@ -20,6 +20,7 @@ const parentApi = {
       method: "POST",
       body: formData,
     }),
+  getProfilIbu: () => parentApi.fetchWithError("/api/parent/profil-ibu"),
 };
 
 export function meta({}: Route.MetaArgs) {
@@ -45,7 +46,29 @@ export default function MobileAddAnakPage() {
         navigate("/login", { replace: true });
         return;
       }
-      setCheckingAuth(false);
+      parentApi
+        .getProfilIbu()
+        .then((res) => {
+          if (!isMounted) return;
+          if (!res?.profilIbu) {
+            toast({
+              title: "Lengkapi Profil Ibu dulu",
+              description: "Sebelum menambah data anak, mohon isi Profil Ibu terlebih dahulu.",
+            });
+            navigate("/m/parent/profil-ibu", { replace: true });
+            return;
+          }
+          setCheckingAuth(false);
+        })
+        .catch(() => {
+          if (!isMounted) return;
+          toast({
+            title: "Gagal memuat data",
+            description: "Tidak bisa memeriksa Profil Ibu. Coba lagi.",
+            variant: "destructive",
+          });
+          navigate("/m/parent/profil-ibu", { replace: true });
+        });
     });
 
     return () => {

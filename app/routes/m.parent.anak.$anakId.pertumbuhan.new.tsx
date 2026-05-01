@@ -34,6 +34,7 @@ export default function MobileAddPertumbuhanPage() {
   const [tanggal, setTanggal] = useState(new Date().toISOString().split("T")[0]);
   const [beratBadan, setBeratBadan] = useState("");
   const [tinggiBadan, setTinggiBadan] = useState("");
+  const [lilaCm, setLilaCm] = useState("");
 
   useEffect(() => {
     let isMounted = true;
@@ -70,6 +71,7 @@ export default function MobileAddPertumbuhanPage() {
           tanggal_pengukuran: tanggal,
           berat_badan: Number(beratBadan),
           tinggi_badan: Number(tinggiBadan),
+          lila_cm: lilaCm ? Number(lilaCm) : null,
         })
       );
       await parentApi.submitAction(fd);
@@ -134,6 +136,18 @@ export default function MobileAddPertumbuhanPage() {
                 placeholder="Contoh: 84"
               />
             </div>
+          </div>
+          <div className={styles.formField}>
+            <label className={styles.formLabel}>LiLA (cm) - Opsional</label>
+            <input
+              className={styles.formInput}
+              type="number"
+              step="0.01"
+              min="1"
+              value={lilaCm}
+              onChange={(e) => setLilaCm(e.target.value)}
+              placeholder="Contoh: 13.2"
+            />
           </div>
 
           <button className={styles.primaryBtn} type="submit" disabled={isSubmitting}>
